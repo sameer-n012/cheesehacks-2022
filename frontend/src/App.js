@@ -3,7 +3,7 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './views/Home';
 import NotFound from './views/NotFound';
-import ClassHome from './views/ClassHome';
+import ClassHome from './views/StudentHome';
 import StudentUpload from './views/StudentUpload';
 import AdminHome from './views/AdminHome';
 import FaceDetection from './views/FaceDetection';
