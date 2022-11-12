@@ -16,7 +16,7 @@ code {
     monospace;
 }
 
-a {
+.header a {
     text-decoration: inherit!important;
     color: initial!important;
 }
