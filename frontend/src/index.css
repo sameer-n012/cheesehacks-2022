@@ -1,3 +1,7 @@
+html {
+    margin: 0;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +14,20 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.light-uw-red-bg {
+    background-color: #DD4444;
+}
+
+.uw-red-bg {
+    background-color: #E15454
+}
+
+.uw-red-text {
+    color: #DD4444;
+}
+
+.light-uw-red-text {
+    color: #F26565;
 }
