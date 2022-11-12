@@ -10,12 +10,12 @@ export default function Header({page}) {
 			<h2 className='header-title text-white w-50'>Face Attendance</h2>
             {page == 'student_home' ? (
                 <Container className='w-50 d-flex align-items-center justify-content-end'>
-                    <Button className='header-button m-2'>Join Class</Button>
-                    <Button className='header-button m-2'>Upload Image</Button>
+                    <Button variant='outline-light' className='header-button m-2'>Join Class</Button>
+                    <Button variant='outline-light' className='header-button m-2'>Upload Image</Button>
                 </Container>
             ) : page == 'teacher_home' ? (
                 <Container className='w-50 d-flex align-items-center justify-content-end'>
-                    <Button className='header-button m-2'>Create Class</Button>
+                    <Button variant='outline-light' className='header-button m-2'>Create Class</Button>
                 </Container>
             ) : (
                 <Container>
