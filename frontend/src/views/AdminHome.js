@@ -4,8 +4,11 @@ export default function AdminHome() {
 	return (
 		<div className='teacherhome'>
             <Header  page='teacher_home'/>
-			<h1>This is the teacher's home page</h1>
-			
+			<h1>Welcome back John!</h1>
+
+				<h2>
+					Classes:
+				</h2>
 		</div>
 	);
 }
