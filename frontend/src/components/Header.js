@@ -4,9 +4,7 @@ export default function Header({page}) {
 
     // TODO insert application name
 	return (
-		<Container fluid className='header w-100 p-3 d-flex  align-items-center' style={{
-            backgroundColor: '#990000',
-        }}>
+		<Container fluid className='header w-100 p-3 d-flex  align-items-center uw-red-bg'>
 			<h2 className='header-title text-white w-50'>Face Attendance</h2>
             {page == 'student_home' ? (
                 <Container className='w-50 d-flex align-items-center justify-content-end'>
