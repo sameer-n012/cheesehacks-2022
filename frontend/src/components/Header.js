@@ -10,14 +10,16 @@ export default function Header({page}) {
                 <Container className='w-50 d-flex align-items-center justify-content-end'>
                     <Button variant='outline-light' className='header-button m-2'>Join Class</Button>
                     <Button variant='outline-light' className='header-button m-2'>Upload Image</Button>
+                    <Button variant='outline-light' className='header-button m-2'>Log Out</Button>
                 </Container>
             ) : page == 'teacher_home' ? (
                 <Container className='w-50 d-flex align-items-center justify-content-end'>
                     <Button variant='outline-light' className='header-button m-2'>Create Class</Button>
+                    <Button variant='outline-light' className='header-button m-2'>Log Out</Button>
                 </Container>
             ) : (
                 <Container>
-                    
+                    <Button variant='outline-light' className='header-button m-2'>Log Out</Button>
                 </Container>
             )}
 		</Container>
