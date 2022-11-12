@@ -37,7 +37,8 @@ body {
 }
 
 h1 {
-  font-family: fantasy;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bolder;
   color: #000000;
   text-align: center;
 }
