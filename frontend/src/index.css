@@ -15,3 +15,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.uw-red-bg {
+    background-color: #F26565;
+}
+
+.uw-red-text {
+    color: #F26565;
+}

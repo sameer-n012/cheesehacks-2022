@@ -1,9 +1,20 @@
 import Header from '../components/Header'
+import { useEffect, useState } from 'react'
 import { Container, Accordion } from 'react-bootstrap'
 
 export default function StudentHome() {
 
-    const classes = [
+    const [classes, setClasses] = useState([{}])
+
+    useEffect(() => { //TODO flask fetch
+        fetch('QUERY').then(
+            response => response.json()
+        ).then(
+            data => setClasses(data.myData)
+        )
+    }, []);
+
+    const sampleClasses = [
         {
             name: 'c1',
             joincode: 'aj09iu231je',
@@ -19,14 +30,14 @@ export default function StudentHome() {
             joincode: 'cxmzf98201',
             attend: true
         }
-    ]
+    ];
 
 	return (
 		<div>
             <Header page='student_home'/>
 			<Container className='p-4'>
                 <Accordion alwaysOpen>
-                    {classes.map((c) => (
+                    {sampleClasses.map((c) => (
                         <Accordion.Item eventKey={c.joincode}>
                             <Accordion.Header className='bg-red'>{c.name}</Accordion.Header>
                             <Accordion.Body>
