@@ -28,7 +28,6 @@ export default function AdminHome() {
 		<div className='teacherhome'>
             <Header  page='teacher_home'/>
 
-			<h1>Welcome back John!</h1>
 			<h2>
 				Classes:
 			</h2>
