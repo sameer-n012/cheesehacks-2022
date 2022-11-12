@@ -4,9 +4,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './views/Home';
 import NotFound from './views/NotFound';
 import ClassHome from './views/ClassHome';
-import StudentUpload from './view/StudentUpload';
-import AdminHome from './view/AdminHome';
-import FaceDetection from './view/FaceDetection';
+import StudentUpload from './views/StudentUpload';
+import AdminHome from './views/AdminHome';
+import FaceDetection from './views/FaceDetection';
 
 function App() {
 	return (
