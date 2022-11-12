@@ -1,9 +1,11 @@
+import {Link} from 'react-router-dom';
 export default function Home() {
 
     return (
-        <div>
-            <h1>This is the home page</h1>
+        <div class="center">
+            <h1>Welcome to Face Attendance!</h1>
+            <Link to="/AdminHome" className="button button1">Teacher Login</Link>
+            <Link to="/StudentHome" className="button button2">Student Login</Link>
         </div>
     )
-
 }
