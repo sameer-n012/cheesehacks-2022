@@ -28,9 +28,7 @@ export default function AdminHome() {
 		<div className='teacherhome'>
             <Header  page='teacher_home'/>
 
-			<h2>
-				Classes:
-			</h2>
+		
 			<ul>
 
 			<Container className=''>
