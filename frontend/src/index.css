@@ -16,10 +16,18 @@ code {
     monospace;
 }
 
+.light-uw-red-bg {
+    background-color: #DD4444;
+}
+
 .uw-red-bg {
-    background-color: #F26565;
+    background-color: #E15454
 }
 
 .uw-red-text {
+    color: #DD4444;
+}
+
+.light-uw-red-text {
     color: #F26565;
 }
