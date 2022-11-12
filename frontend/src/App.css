@@ -36,6 +36,12 @@ body {
   background-image: url("../public/background_image.jpg");
 }
 
+h1 {
+  font-family: fantasy;
+  color: #000000;
+  text-align: center;
+}
+
 /* Centering code reference: https://www.w3schools.com/css/css_align.asp */
 .center {
   text-align: center;
