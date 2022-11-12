@@ -9,18 +9,19 @@ import AdminHome from './views/AdminHome';
 import FaceDetection from './views/FaceDetection';
 
 function App() {
+
 	return (
-		<BrowserRouter>
-			<Routes>
-				<Route path='/' element={<Home />} />
-				<Route path='/student' element={<StudentHome />} />
-				<Route path='/upload' element={<StudentUpload />} />
-				<Route path='/adminhome' element={<AdminHome />} />
-				<Route path='/detect' element={<FaceDetection />} />
-				{/* Add other routes here */}
-				<Route path='*' element={<NotFound />} />
-			</Routes>
-		</BrowserRouter>
+        <BrowserRouter>
+            <Routes>
+                <Route path='/' element={<Home />} />
+                <Route path='/student' element={<StudentHome />} />
+                <Route path='/upload' element={<StudentUpload />} />
+                <Route path='/adminhome' element={<AdminHome />} />
+                <Route path='/detect' element={<FaceDetection />} />
+                {/* Add other routes here */}
+                <Route path='*' element={<NotFound />} />
+            </Routes>
+        </BrowserRouter>
 	);
 }
 
