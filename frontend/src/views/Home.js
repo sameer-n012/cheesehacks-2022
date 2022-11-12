@@ -5,7 +5,7 @@ export default function Home() {
         <div class="center">
             <h1>Welcome to Face Attendance!</h1>
             <Link to="/AdminHome" className="button button1">Teacher Login</Link>
-            <Link to="/StudentHome" className="button button2">Student Login</Link>
+            <Link to="/student" className="button button2">Student Login</Link>
         </div>
     )
 }
