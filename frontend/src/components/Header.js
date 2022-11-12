@@ -1,5 +1,6 @@
 import { Container, Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom'
 
 
 export default function Header({page}) {
@@ -24,8 +25,8 @@ export default function Header({page}) {
     // TODO insert application name
 	return (
 		<Container fluid className='header w-100 p-3 d-flex  align-items-center uw-red-bg'>
-			<h2 className='header-title text-white w-50'>Face Attendance</h2>
-            <Container className='w-50 d-flex align-items-center justify-content-end'>
+			<Link to='/' style={{width:'inherit'}}><h2 className='header-title text-white text-decoration-none'>Face Attendance</h2></Link>
+            <Container className='d-flex align-items-center justify-content-end'>
                 {page == 'student_home' ? (
                     <div>
                         <Button variant='outline-light' className='header-button m-2' onClick={() => {alert('incomplete')}}>Join Class</Button>

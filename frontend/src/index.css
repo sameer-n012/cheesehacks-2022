@@ -16,6 +16,11 @@ code {
     monospace;
 }
 
+a {
+    text-decoration: inherit!important;
+    color: initial!important;
+}
+
 .light-uw-red-bg {
     background-color: #DD4444;
 }
