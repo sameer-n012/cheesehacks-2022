@@ -5,7 +5,7 @@ import os
 from werkzeug.utils import secure_filename
 
 
-app = Flask(__name__, static_folder = '../react-frontend/build')
+app = Flask(__name__, static_folder = '../frontend/build')
 app.secret_key = 'super secret key'
 app.config['SESSION_TYPE'] = 'filesystem'
 
