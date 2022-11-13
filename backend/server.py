@@ -34,29 +34,20 @@ resnet = InceptionResnetV1(pretrained='vggface2').eval()
 
 def make_images_and_encodings():
 
-    for class_code_dir in os.listdir('uploads'):
-        
-        for file in os.listdir(os.path.join(UPLOAD_FOLDER, class_code_dir)):
-            
-            """
-            loaded_image = face_recognition.load_image_file(file)
-            face_images.append(loaded_image)
-            known_face_encodings.append(face_recognition.face_encodings(loaded_image)[0])
-            known_face_names.append(file) # CHANGE TO BE ACTUAL NAMES SOMEHOW
-            """
+    for file in os.listdir(UPLOAD_FOLDER):
 
-            img = Image.open(os.path.join(UPLOAD_FOLDER, class_code_dir, file))
-            # Get cropped and prewhitened image tensor
-            img_cropped = mtcnn(img)
+        img = Image.open(os.path.join(UPLOAD_FOLDER, file))
+        # Get cropped and prewhitened image tensor
+        img_cropped = mtcnn(img)
 
-            if img_cropped is not None:
+        if img_cropped is not None:
 
-                # Calculate embedding (unsqueeze to add batch dimension)
-                img_embedding = resnet(img_cropped.unsqueeze(0))
-                known_face_encodings.append(img_embedding)
-                known_face_names.append(file)
-            else:
-                print('got NONE embedding')
+            # Calculate embedding (unsqueeze to add batch dimension)
+            img_embedding = resnet(img_cropped.unsqueeze(0))
+            known_face_encodings.append(img_embedding)
+            known_face_names.append(file)
+        else:
+            print('got NONE embedding')
 
 make_images_and_encodings()
 
