@@ -117,7 +117,7 @@ export default function AdminHome() {
                                 <Container className='d-flex flex-row p-2 align-items-center justify-content-center'>
                                     <Container className='d-flex p-2 flex-column align-items-center justify-content-around'>
                                         <p>Join Code: {c.code}</p>
-                                        <Button variant='outline-dark' onClick={() => {navigate('/detect')}}> Launch Detection </Button>
+                                        <Button variant='outline-dark' id={c.code} onClick={e => {navigate('/detect?classCode=' + e.target.id)}}> Launch Detection </Button>
                                     </Container>
                                     <Container className='d-flex p-2 flex-column align-items-center justify-content-around'>
                                         <p>Today's Attendance: {c.num_present + '/' + c.class_size}</p>
