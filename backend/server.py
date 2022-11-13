@@ -275,7 +275,9 @@ def join_class():
     userid = request.args.get('userid', None)
     print('joining class', class_code)
 
-    return addToClass(userid, class_code)
+    a = addToClass(userid, class_code)
+    addToAbsentList(userid, class_code)
+    return a
 
 
 def addToClass(student, class_code):
@@ -293,10 +295,54 @@ def addToClass(student, class_code):
 
     return str(class_name)
 
+def addToPresentList(student, class_code):
+    classDF = pd.read_csv('./classes.csv', keep_default_na=False)
+
+    absent_set = set(classDF.loc[classDF['code'] == class_code, 'absent'].values[0].split(','))
+    present_set = set(classDF.loc[classDF['code'] == class_code, 'present'].values[0].split(','))
+    
+    if student in absent_set:
+        absent_set.remove(student)
+        present_set.add(student)
+
+    classDF.loc[classDF['code'] == class_code, 'present'] = ",".join(present_set)
+    classDF.loc[classDF['code'] == class_code, 'absent'] = ",".join(absent_set)
+
+    classDF.to_csv('./classes.csv', index=False)
+
 
 def addToAbsentList(student, class_code):
     classDF = pd.read_csv('./classes.csv', keep_default_na=False)
-    userDF = pd.read_csv('./users.csv', keep_default_na=False)
+
+    # Add a given student to the absent list of a given class
+    # And if they're on the present list, remove them from there
+    absent_set = set(classDF.loc[classDF['code'] == class_code, 'absent'].values[0].split(','))
+    absent_set.add(student)
+    absent_set = ",".join(absent_set)
+    classDF.loc[classDF['code'] == class_code, 'absent'] = absent_set
+
+    present_set = set(classDF.loc[classDF['code'] == class_code, 'present'].values[0].split(','))
+    if student in present_set:
+        present_set.remove(student)
+        present_set = ",".join(present_set)
+        classDF.loc[classDF['code'] == class_code, 'present'] = present_set
+    else:
+        classDF.loc[classDF['code'] == class_code, 'class_size'] = len(present_set) + len(absent_set.split(","))
+
+    classDF.to_csv('./classes.csv', index=False)
+
+def moveAllToAbsent(class_code):
+    classDF = pd.read_csv('./classes.csv', keep_default_na=False)
+
+    absent_set = set(classDF.loc[classDF['code'] == class_code, 'absent'].values[0].split(','))
+    present_set = set(classDF.loc[classDF['code'] == class_code, 'present'].values[0].split(','))
+    absent_set = absent_set.union(present_set)
+
+    absentees = ",".join(absent_set)
+    classDF.loc[classDF['code'] == class_code, 'present'] = ""
+    classDF.loc[classDF['code'] == class_code, 'absent'] = absentees
+
+    classDF.to_csv('./classes.csv', index=False)
 
 
 @app.route('/api/student_sign_up', methods=['GET', 'POST'])
