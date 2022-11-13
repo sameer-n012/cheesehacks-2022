@@ -70,6 +70,9 @@ STUDENT_HOME = '/student'
 TEACHER_HOME = '/admin'
 
 
+### Connect to MongoDB when server starts up
+
+
 # Serve up frontend
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
