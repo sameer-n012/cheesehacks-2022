@@ -279,6 +279,8 @@ def join_class():
     if class_code not in classDF['code']:
         raise Exception()
 
+    # Change class list a student is in by adding the class code given
+    userDF.loc[userDF['email'] == userid, 'classes'] = userDF.loc[userDF['email'] == userid, 'classes'] + ',' + class_code
 
     userDF.to_csv('./classes.csv')
     print("Class " + str(class_code) + " was joined")
