@@ -90,6 +90,11 @@ export default function AdminHome() {
         link.click();
     }
 
+    function detectBtnClicked(classCode) {
+        navigate('/detect?classCode=' + classCode)
+    }
+
+
 	return (
 		
 		<div className='teacherhome'>
@@ -104,7 +109,7 @@ export default function AdminHome() {
                                 <Container className='d-flex flex-row p-2 align-items-center justify-content-center'>
                                     <Container className='d-flex p-2 flex-column align-items-center justify-content-around'>
                                         <p>Join Code: {c.joincode}</p>
-                                        <Button variant='outline-danger' onClick={() => {navigate('/detect')}}> Launch Detection </Button>
+                                        <Button variant='outline-danger' id={c.joincode} onClick={e => detectBtnClicked(e.target.id)}> Launch Detection </Button>
                                     </Container>
                                     <Container className='d-flex p-2 flex-column align-items-center justify-content-around'>
                                         <p>Today's Attendance: {c.attendance.length + '/' + c.classSize}</p>

@@ -22,6 +22,7 @@ UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 #face_images = []
+class_codes = []
 known_face_encodings = []
 known_face_names = [] # For now, just append file names as names
 
@@ -34,6 +35,7 @@ resnet = InceptionResnetV1(pretrained='vggface2').eval()
 def make_images_and_encodings():
 
     for class_code_dir in os.listdir('uploads'):
+        
         for file in os.listdir(os.path.join(UPLOAD_FOLDER, class_code_dir)):
             
             """
@@ -68,9 +70,6 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 STUDENT_HOME = '/student'
 TEACHER_HOME = '/admin'
-
-
-### Connect to MongoDB when server starts up
 
 
 # Serve up frontend
