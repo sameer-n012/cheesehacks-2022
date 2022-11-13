@@ -61,13 +61,11 @@ def get_images_embeddings():
         print("URL " + url)
         suffix = url.split('.')[-1]
         prefix = url.split('.')[0]
-        if suffix == "npy":
-            print('added')
-            known_face_encodings.append(np.load(os.path.join(UPLOAD_FOLDER, url)))
-        else:
+        img_path = os.path.join(UPLOAD_FOLDER, url)
+        if img_path not in image_list and suffix != "npy":
+            known_face_names.append(prefix)
+            known_face_encodings.append(np.load(os.path.join(UPLOAD_FOLDER, prefix + ".npy")))
             image_list.append(os.path.join(UPLOAD_FOLDER, url))
-        if prefix not in known_face_names:
-                known_face_names.append(prefix)
 
 
 
@@ -94,16 +92,16 @@ def show_frontend(path):
 
 
 # Create class endpoint
-@app.route('/api/create-class', methods=['GET', 'POST'])
-def create_class():
-    if 'class_code' not in request.form:  # class_code must match name attribute of html form
-        flash('No class code')
-        return redirect(request.url)
-    class_code = request.form['class_code']
-    class_path = os.path.join(UPLOAD_FOLDER, class_code)
-    if not os.path.exists(class_path):
-        os.mkdir(class_path)
-    return redirect('/class')
+# @app.route('/api/create-class', methods=['GET', 'POST'])
+# def create_class():
+#     if 'class_code' not in request.form:  # class_code must match name attribute of html form
+#         flash('No class code')
+#         return redirect(request.url)
+#     class_code = request.form['class_code']
+#     class_path = os.path.join(UPLOAD_FOLDER, class_code)
+#     if not os.path.exists(class_path):
+#         os.mkdir(class_path)
+#     return redirect('/class')
 
 
 ### Create class endpoint 2
@@ -219,19 +217,18 @@ def detect_face_from_img(class_code):
             img_embedding = resnet(img_cropped.unsqueeze(0))
 
             # matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
-            distance = None
+            similarity = None
             cos = CosineSimilarity()
-            min_idx = None
+            max_idx = None
             get_images_embeddings() # don't mess with class code
-            print(f"LEN:  {len(known_face_encodings)}")
             for idx in range(len(known_face_encodings)):
                 cur_embedding = torch.from_numpy(known_face_encodings[idx])
                 output = cos(cur_embedding, img_embedding)[0].item()
-                if distance is None or output < distance:
-                    distance = output
-                    min_idx = idx
-            if min_idx is not None:
-                name = known_face_names[min_idx]
+                if similarity is None or output > similarity:
+                    similarity = output
+                    max_idx = idx
+            if max_idx is not None:
+                name = known_face_names[max_idx]
                 addToPresentList(name, class_code)
                 return name
             else:
@@ -327,11 +324,15 @@ def addToClass(student, class_code):
     userDF = pd.read_csv('./users.csv', keep_default_na=False)
     print(classDF)
 
-    if class_code not in classDF['code'].values:
-        raise Exception("WTF is this class code", class_code)
+    # if class_code not in classDF['code'].values:
+    #     raise Exception("? ", class_code)
 
+    class_set = set(userDF.loc[userDF['email'] == student, 'classes'].iloc[0].split(","))
+    if("" in class_set):
+        class_set.remove("")
+    class_set.add(class_code)
     # Change class list a student is in by adding the class code given
-    userDF.loc[userDF['email'] == student, 'classes'] = userDF.loc[userDF['email'] == student, 'classes'] + ',' + class_code
+    userDF.loc[userDF['email'] == student, 'classes'] =  ",".join(class_set)
 
     userDF.to_csv('./users.csv', index=False)
     print("Class " + str(class_code) + " was joined")
@@ -340,9 +341,14 @@ def addToClass(student, class_code):
 
 def addToPresentList(student, class_code):
     classDF = pd.read_csv('./classes.csv', keep_default_na=False)
+    classDF['code'] = classDF['code'].astype(str)
 
     absent_set = set(classDF.loc[classDF['code'] == class_code, 'absent'].values[0].split(','))
     present_set = set(classDF.loc[classDF['code'] == class_code, 'present'].values[0].split(','))
+    if("" in present_set):
+        present_set.remove("")
+    if("" in absent_set):
+        absent_set.remove("")
     
     for student_email in absent_set:
         if student_email.startswith(student):
@@ -358,29 +364,40 @@ def addToPresentList(student, class_code):
 
 def addToAbsentList(student, class_code):
     classDF = pd.read_csv('./classes.csv', keep_default_na=False)
+    classDF['code'] = classDF['code'].astype(str)
 
     # Add a given student to the absent list of a given class
     # And if they're on the present list, remove them from there
     absent_set = set(classDF.loc[classDF['code'] == class_code, 'absent'].values[0].split(','))
-    absent_set.add(student)
-    absent_set = ",".join(absent_set)
-    classDF.loc[classDF['code'] == class_code, 'absent'] = absent_set
 
     present_set = set(classDF.loc[classDF['code'] == class_code, 'present'].values[0].split(','))
+    if("" in present_set):
+        present_set.remove("")
+    if("" in absent_set):
+        absent_set.remove("")
+
     if student in present_set:
         present_set.remove(student)
         present_set = ",".join(present_set)
         classDF.loc[classDF['code'] == class_code, 'present'] = present_set
     else:
-        classDF.loc[classDF['code'] == class_code, 'class_size'] = len(present_set) + len(absent_set.split(","))
-
+        classDF.loc[classDF['code'] == class_code, 'class_size'] = len(present_set) + len(absent_set) + 1
+    
+    absent_set.add(student)
+    absent_set = ",".join(absent_set)
+    classDF.loc[classDF['code'] == class_code, 'absent'] = absent_set
     classDF.to_csv('./classes.csv', index=False)
 
 def moveAllToAbsent(class_code):
     classDF = pd.read_csv('./classes.csv', keep_default_na=False)
+    classDF['code'] = classDF['code'].astype(str)
 
     absent_set = set(classDF.loc[classDF['code'] == class_code, 'absent'].values[0].split(','))
     present_set = set(classDF.loc[classDF['code'] == class_code, 'present'].values[0].split(','))
+    if("" in present_set):
+        present_set.remove("")
+    if("" in absent_set):
+        absent_set.remove("")
     absent_set = absent_set.union(present_set)
 
     absentees = ",".join(absent_set)
@@ -417,14 +434,17 @@ def get_attendance():
     classid = request.args.get('classid', None)
     print(classid)
     classDF = pd.read_csv('./classes.csv', keep_default_na=False)
+    classDF['code'] = classDF['code'].astype(str)
     presentlist = classDF.loc[classDF['code'] == classid].iloc[0]['present'].split(",")
     absentlist = classDF.loc[classDF['code'] == classid].iloc[0]['absent'].split(",")
     print(presentlist, absentlist)
     out = "email,attendance\n"
     for s in presentlist:
-        out += s + "," + "Present\n"
+        if s != "":
+            out += s + "," + "Present\n"
     for s in absentlist:
-        out += s + "," + "Absent\n"
+        if s != "":
+            out += s + "," + "Absent\n"
     return out
 
 
@@ -433,17 +453,30 @@ def get_classes():
     # TODO
     userid = request.args.get('userid', None)
     print(userid)
-    userDf = pd.read_csv('./users.csv')
+    userDf = pd.read_csv('./users.csv', keep_default_na=False)
     classDF = pd.read_csv('./classes.csv', keep_default_na=False)
-    classes = userDf.loc[userDf['email'] == userid].iloc[0]['classes'].split(",")
+    classDF['code'] = classDF['code'].astype(str)
+    classes = str(userDf.loc[userDf['email'] == userid].iloc[0]['classes']).split(",")
+    print(classes)
+    if len(classes) == 1 and classes[0] == "":
+        return jsonify([])
+    elif len(classes) == 0:
+        return jsonify([])
+
     out = []
     for c in classes:
+        if c == "":
+            continue
+        print(classDF.loc[classDF['code'] == c])
         cline = classDF.loc[classDF['code'] == c].iloc[0]
+        num_present = len(cline['present'].split(","))
+        if "" in cline['present'].split(","):
+            num_present -= 1
         out.append({
             "code": cline["code"],
             "name": cline["name"],
             "present": bool(userid in cline["present"].split(",")),
-            "num_present": min(len(cline["present"].split(",")), int(cline["class_size"])),
+            "num_present": min(num_present, int(cline["class_size"])),
             "class_size": int(cline["class_size"])
         })
     print(classes)

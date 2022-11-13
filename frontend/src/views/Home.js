@@ -8,7 +8,7 @@ export default function Home() {
 
     return (
         <div class="center">
-            <h1>Welcome to Face Attendance!</h1>
+            <h1>Welcome to Face First!</h1>
             <br></br>
             
             {/* Form Padding  */}
