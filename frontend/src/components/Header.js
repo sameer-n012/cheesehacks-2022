@@ -78,7 +78,7 @@ export default function Header({page}) {
             body: className
         };
 
-        fetch('/api/create-class2', requestOptions).then(
+        fetch('/api/create-class2?userid=' + currentUser, requestOptions).then(
             response => response.status 
         ).then(
             status => { console.log(status); }

@@ -93,11 +93,13 @@ def create_class():
 @app.route('/api/create-class2', methods=['POST'])
 def create_class2():
     class_name = request.data.decode('utf-8')
+    userid = request.args.get('userid', None)
     class_code = generate_class_code(class_name)
     f = open("./classes.csv", "a")
     f.write(str(class_code) + "," + class_name.replace(",", "") + ",,,0\n")
     f.close()
     print("Class " + class_name + " with code " + str(class_code) + " was created")
+    addToClass(userid, class_code)
 
     return str(class_code)
 
@@ -273,6 +275,10 @@ def join_class():
     userid = request.args.get('userid', None)
     print('joining class', class_code)
 
+    return addToClass(userid, class_code)
+
+
+def addToClass(student, class_code):
     classDF = pd.read_csv('./classes.csv', keep_default_na=False)
     userDF = pd.read_csv('./users.csv', keep_default_na=False)
 
@@ -286,6 +292,11 @@ def join_class():
     print("Class " + str(class_code) + " was joined")
 
     return str(class_name)
+
+
+def addToAbsentList(student, class_code):
+    classDF = pd.read_csv('./classes.csv', keep_default_na=False)
+    userDF = pd.read_csv('./users.csv', keep_default_na=False)
 
 
 @app.route('/api/student_sign_up', methods=['GET', 'POST'])
