@@ -60,7 +60,7 @@ export default function AdminHome() {
     //     }
     // ];
 
-    const exportToCSV = () => {
+    const exportToCSV = (classid) => {
         // TODO get attendance
 
         const requestOptions = {
@@ -68,32 +68,34 @@ export default function AdminHome() {
             headers: { 'Content-Type': 'application/json' },
         };
 
-        let response = -1
-        fetch('/api/get-attendance', requestOptions).then(
-            response => response.status 
+        let data = null;
+        fetch('/api/get-attendance?classid=' + classid, requestOptions).then(
+            response => response.text() 
         ).then(
-            status => { response = status; }
+            data => {
+                let csvContent = "data:text/csv;charset=utf-8," 
+                + data;
+        
+                var encodedUri = encodeURI(csvContent);
+                var link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+
+                let dateStr = new Date().toISOString().slice(0,10).replace(/-/g, "");
+
+                link.setAttribute("download", "attendance_" + dateStr + ".csv");
+                document.body.appendChild(link); // Required for FF
+                
+                link.click();
+            }
         );
 
-        const rows = [
-            ["", "d1", "d2", "d3", "d4", "d5", "d6"],
-            ["s1", "x", "o", "x", "x", "x", "o"],
-            ["s2", "x", "x", "x", "o", "x", "x"]
-        ];
+        // const rows = [
+        //     ["", "d1", "d2", "d3", "d4", "d5", "d6"],
+        //     ["s1", "x", "o", "x", "x", "x", "o"],
+        //     ["s2", "x", "x", "x", "o", "x", "x"]
+        // ];
         
-        let csvContent = "data:text/csv;charset=utf-8," 
-            + rows.map(e => e.join(",")).join("\n");
-    
-        var encodedUri = encodeURI(csvContent);
-        var link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-
-        let dateStr = new Date().toISOString().slice(0,10).replace(/-/g, "");
-
-        link.setAttribute("download", "attendance_" + dateStr + ".csv");
-        document.body.appendChild(link); // Required for FF
         
-        link.click();
     }
 
     function detectBtnClicked(classCode) {
@@ -119,7 +121,7 @@ export default function AdminHome() {
                                     </Container>
                                     <Container className='d-flex p-2 flex-column align-items-center justify-content-around'>
                                         <p>Today's Attendance: {c.num_present + '/' + c.class_size}</p>
-                                        <Button  variant="outline-dark" onClick={exportToCSV}>Export to CSV</Button>
+                                        <Button  id={c.code} variant="outline-dark" onClick={(e) => exportToCSV(e.target.id)}>Export to CSV</Button>
                                     </Container>
                                 </Container>
                             </Accordion.Body>

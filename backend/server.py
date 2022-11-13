@@ -239,7 +239,18 @@ def student_sign_up():
 @app.route('/api/get-attendance', methods=['GET'])
 def get_attendance():
     # TODO
-    return redirect(TEACHER_HOME)
+    classid = request.args.get('classid', None)
+    print(classid)
+    classDF = pd.read_csv('./classes.csv', keep_default_na=False)
+    presentlist = classDF.loc[classDF['code'] == classid].iloc[0]['present'].split(",")
+    absentlist = classDF.loc[classDF['code'] == classid].iloc[0]['absent'].split(",")
+    print(presentlist, absentlist)
+    out = "email,attendance\n"
+    for s in presentlist:
+        out += s + "," + "Present\n"
+    for s in absentlist:
+        out += s + "," + "Absent\n"
+    return out
 
 @app.route('/api/get-classes', methods=['GET'])
 def get_classes():
