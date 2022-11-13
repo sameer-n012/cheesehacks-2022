@@ -1,0 +1,23 @@
+.face-dec-page-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+.face-dec-title {
+    font-family: 'Helvetica';
+    margin-top: 80px;
+    font-weight: bold;
+}
+
+#detect-video {
+    width: 70vw;
+    height: 50vh;
+}
+
+.response-msg {
+    text-align: center;
+}

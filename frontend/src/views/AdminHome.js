@@ -96,6 +96,11 @@ export default function AdminHome() {
         link.click();
     }
 
+    function detectBtnClicked(classCode) {
+        navigate('/detect?classCode=' + classCode)
+    }
+
+
 	return (
 		
 		<div className='teacherhome'>
