@@ -78,6 +78,7 @@ export default function FaceDetection() {
 				</div>
 				<p className="response-msg">{responseMsg}‎ </p>
             </div>
+			<button onClick={()=>{navigate('/student')}} className="btn btn-outline-dark w-25 m-3">Back</button>
 		</div>
 	);
 }
