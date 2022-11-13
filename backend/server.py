@@ -1,9 +1,10 @@
 from email_validator import validate_email, EmailNotValidError
 from urllib import response
-from flask import Flask, request, redirect, flash, render_template, url_for, send_from_directory
+from flask import Flask, request, redirect, flash, render_template, url_for, send_from_directory, response
 from markupsafe import escape
 import os
 from werkzeug.utils import secure_filename
+
 
 
 app = Flask(__name__, static_folder='../frontend/build')
@@ -85,7 +86,7 @@ def email_check():
     else:
         email = request.form['email']
         return isEmail(email)
-    return redirect("/")
+    return response()
 
  
 def isEmail(email):

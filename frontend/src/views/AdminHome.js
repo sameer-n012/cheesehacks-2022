@@ -71,7 +71,7 @@ export default function AdminHome() {
 										</Container>
 										<Container className='d-flex w-50 p-2 align-items-center justify-content-center'>
 											<p>Today's Attendance: {c.attendance.length + '/' + c.classSize}</p>
-											<button  class="btn btn-outline-danger" onClick={exportToCSV}>Export to CSV</button>
+											<button  class="btn btn-outline-danger" onClick={exportToCSV}> Export to CSV</button>
 										</Container>
 									
 									</Container>
