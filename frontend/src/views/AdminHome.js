@@ -67,7 +67,7 @@ export default function AdminHome() {
 									<Container className='d-flex flex-column p-2 align-items-center justify-content-center'>
 										<Container className='d-flex w-50'>
 											<p>Join Code: {c.joincode}</p>
-											<button class="btn btn-outline-danger" onClick={copyFunction(c.joincode)} >Copy</button>
+											<button class="btn btn-outline-danger" id={c.joincode} onClick={e => {copyFunction(e.target.id)}} >Copy</button>
 										</Container>
 										<Container className='d-flex w-50 p-2 align-items-center justify-content-center'>
 											<p>Today's Attendance: {c.attendance.length + '/' + c.classSize}</p>
