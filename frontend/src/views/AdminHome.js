@@ -50,16 +50,11 @@ export default function AdminHome() {
         }
     ];
 
-
-	
-
 	return (
-
 		
 		<div className='teacherhome'>
             <Header  page='teacher_home'/>
 
-		
 			<ul>
 
 			<Container className='p-4 align-items-center justify-content-center'>
