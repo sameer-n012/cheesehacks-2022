@@ -1,11 +1,12 @@
+from email_validator import validate_email, EmailNotValidError
 from urllib import response
-from flask import Flask, request, redirect, flash, render_template, url_for, send_from_directory
+from flask import Flask, request, redirect, flash, render_template, url_for, send_from_directory, Response
 from markupsafe import escape
 import os
 from werkzeug.utils import secure_filename
 
 
-app = Flask(__name__, static_folder = '../frontend/build')
+app = Flask(__name__, static_folder='../frontend/build')
 app.secret_key = 'super secret key'
 app.config['SESSION_TYPE'] = 'filesystem'
 
@@ -16,7 +17,7 @@ STUDENT_HOME = '/student'
 TEACHER_HOME = '/adminhome'
 
 
-### Serve up frontend
+# Serve up frontend
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def show_frontend(path):
@@ -27,10 +28,10 @@ def show_frontend(path):
         return send_from_directory(app.static_folder, 'index.html')
 
 
-### Create class endpoint
+# Create class endpoint
 @app.route('/api/create-class', methods=['GET', 'POST'])
 def create_class():
-    if 'class_code' not in request.form: # class_code must match name attribute of html form
+    if 'class_code' not in request.form:  # class_code must match name attribute of html form
         flash('No class code')
         return redirect(request.url)
     class_code = request.form['class_code']
@@ -90,6 +91,36 @@ def upload_file():
     return redirect('/upload')
 
 
+### Email Check route
+@app.route('/api/email_check', methods=['GET', 'POST'])
+def email_check():
+    # print(request.form['email'])
+    if 'email' not in request.form:
+        pass
+    else:
+        email = request.form['email']
+        if not isEmail:
+            return Response("{'message': 'Invalid! Email is not registered'}", 
+                status=200, mimetype='application/json')
+    # return redirect('/')
+
+ 
+def isEmail(email):
+    try:
+      # validate and get info
+        v = validate_email(email)
+        # replace with normalized form
+        email = v["email"] 
+        return True
+    except EmailNotValidError as e:
+        # email is not valid, exception message is human-readable
+        return False
+
+
+@app.route('/api/teacher_sign_up', methods=['GET', 'POST'])
+def teacher_sign_up():
+    return redirect("/AdminHome")
+
 ### Join class endpoint
 @app.route('/api/join-class', methods=['POST'])
 def join_class():
@@ -97,5 +128,11 @@ def join_class():
     print('joining class', class_code)
     return redirect(STUDENT_HOME)
 
+
+@app.route('/api/student_sign_up', methods=['GET', 'POST'])
+def student_sign_up():
+    return redirect("/Student")
+
+
 if __name__ == "__main__":
-    app.run(debug = True)
+    app.run(debug=True)

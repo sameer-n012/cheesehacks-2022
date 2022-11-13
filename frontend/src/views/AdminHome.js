@@ -10,7 +10,21 @@ async function copyFunction(joincode) {
 }
 
 function exportToCSV(){
+	const rows = [
+		["name1", "city1", "some other info"],
+		["name2", "city2", "more info"]
+	];
+	
+	let csvContent = "data:text/csv;charset=utf-8," 
+		+ rows.map(e => e.join(",")).join("\n");
 
+	var encodedUri = encodeURI(csvContent);
+	var link = document.createElement("a");
+	link.setAttribute("href", encodedUri);
+	link.setAttribute("download", "my_data.csv");
+	document.body.appendChild(link); // Required for FF
+	
+	link.click();
 }
 
 export default function AdminHome() {
@@ -36,16 +50,11 @@ export default function AdminHome() {
         }
     ];
 
-
-	
-
 	return (
-
 		
 		<div className='teacherhome'>
             <Header  page='teacher_home'/>
 
-		
 			<ul>
 
 			<Container className='p-4 align-items-center justify-content-center'>
@@ -58,11 +67,11 @@ export default function AdminHome() {
 									<Container className='d-flex flex-column p-2 align-items-center justify-content-center'>
 										<Container className='d-flex w-50'>
 											<p>Join Code: {c.joincode}</p>
-											<button class="btn btn-outline-danger" onClick={copyFunction(c.joincode)} >Copy</button>
+											<button class="btn btn-outline-danger" id={c.joincode} onClick={e => {copyFunction(e.target.id)}} >Copy</button>
 										</Container>
 										<Container className='d-flex w-50 p-2 align-items-center justify-content-center'>
 											<p>Today's Attendance: {c.attendance.length + '/' + c.classSize}</p>
-											<button  class="btn btn-outline-danger">Export to CSV</button>
+											<button  class="btn btn-outline-danger" onClick={exportToCSV}>Export to CSV</button>
 										</Container>
 									
 									</Container>
