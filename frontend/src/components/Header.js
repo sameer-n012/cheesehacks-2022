@@ -58,15 +58,11 @@ export default function Header({page}) {
             body: className
         };
 
-        let response = -1
-        fetch('/api/join-class', requestOptions).then(
+        fetch('/api/join-class?userid=' + currentUser, requestOptions).then(
             response => response.status 
         ).then(
-            status => { response = status; }
+            status => { console.log(status) }
         );
-        if(response != 200) {
-            alert("Sorry, something went wrong")
-        }
         console.log('joining class ' + className);
         handleClose();
     }
@@ -82,16 +78,12 @@ export default function Header({page}) {
             body: className
         };
 
-        let response = -1
-        fetch('/api/create-class2', requestOptions).then(
+        fetch('/api/create-class2?userid=' + currentUser, requestOptions).then(
             response => response.status 
         ).then(
-            status => { response = status; }
+            status => { console.log(status); }
         );
-        if(response != 200) {
-            alert("Sorry, something went wrong")
-        }
-        console.log('joining class ' + className);
+        console.log('creating class ' + className);
         handleClose();
         
     }
@@ -101,12 +93,12 @@ export default function Header({page}) {
 		<Container fluid className='header w-100 p-3 d-flex  align-items-center uw-red-bg'>
 			<Link to='/' style={{width:'inherit'}}><h2 className='header-title text-white text-decoration-none'>Face Attendance</h2></Link>
             <Container className='d-flex align-items-center justify-content-end'>
-                {page == 'student_home' ? (
+                {page == 'student_home' && currentUser ? (
                     <div>
                         <Button variant='outline-light' className='header-button m-2' onClick={() => {handleAddShow()}}>Join Class</Button>
                         <Button variant='outline-light' className='header-button m-2' onClick={() => {uploadImage()}}>Upload Image</Button>
                     </div>
-                ) : page == 'teacher_home' ? (
+                ) : page == 'teacher_home' && currentUser ? (
                     <div>
                         <Button variant='outline-light' className='header-button m-2' onClick={() => {handleCreateShow()}}>Create Class</Button>
                     </div>
