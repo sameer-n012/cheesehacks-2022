@@ -28,6 +28,106 @@
   color: #61dafb;
 }
 
+/* Additions by DJ --> Home Page *******************************************/
+
+/* Image from: https://hougumlaw.com/home/light-website-backgrounds-light-color-background-images-light-color-background-images-for-website-1024x640/ */
+/* Code reference: https://stackoverflow.com/questions/20047364/how-to-give-the-background-image-path-in-css */
+body {
+  background-image: url("../public/background2.jpg"); 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+h1 {
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bolder;
+  color: #000000;
+  text-align: center;
+}
+
+/* Centering code reference: https://www.w3schools.com/css/css_align.asp */
+.center {
+  text-align: center;
+  /* border: 3px solid green; */
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding-top: 5%;
+}
+
+/* Button reference: https://www.w3schools.com/tags/tag_button.asp */
+/* Button shadow reference: https://codepen.io/seme332/pen/reJOwo */
+.button {
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.button1 {
+  background-color: black;
+  color: white;
+  /* border: 2px solid #4CAF50; */
+}
+
+.button1:hover {
+  background-color: rgb(0, 0, 0);
+  color: white;
+  box-shadow: 0px 15px 20px rgba(100, 100, 100, 0.4);
+  transform: translateY(-7px);
+
+}
+
+.button2 {
+  background-color: black;
+  color: white;
+  /* border: 2px solid #008CBA; */
+}
+
+.button2:hover {
+  background-color: rgb(0, 0, 0);
+  color: white;
+  box-shadow: 0px 15px 20px rgba(100, 100, 100, 0.4);
+  transform: translateY(-7px);
+}
+
+/* HTML FORM CSS */
+form {
+  padding-top: 3%;
+  padding-bottom: 3%;
+}
+
+label {
+  font-family: "Times New Roman", Times, serif;
+  /* font-weight: bolder; */
+  padding-right: 3%;
+  font-size: 20px;
+}
+
+.submit {
+  padding: 5px 32px;
+  background-color: black;
+  color: white;
+}
+
+.submit:hover {
+  background-color: rgba(180, 180, 180, 0.75);
+  color: black;
+  /* box-shadow: 0px 15px 20px rgba(100, 100, 100, 0.4);
+  transform: translateY(-7px); */
+}
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
