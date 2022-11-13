@@ -12,6 +12,9 @@ app.config['SESSION_TYPE'] = 'filesystem'
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
+STUDENT_HOME = '/student'
+TEACHER_HOME = '/adminhome'
+
 
 ### Serve up frontend
 @app.route('/', defaults={'path': ''})
@@ -37,10 +40,24 @@ def create_class():
     return redirect('/class')
 
 
+### Create class endpoint 2
+@app.route('/api/create-class2', methods=['GET', 'POST'])
+def create_class2():
+    class_name = request.data.decode('utf-8')
+    class_code = generate_class_code(class_name)
+    print("Class " + class_name + " with code " + class_code + " was created")
+
+    return redirect(TEACHER_HOME)
+
+### Create a unique class code # TODO make it unique
+def get_class_code(class_name):
+    return hash(class_name) % (10**10)
+
 ### Student upload image endpoint
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @app.route('/api/upload', methods=['GET', 'POST'])
 def upload_file():
@@ -73,6 +90,12 @@ def upload_file():
     return redirect('/upload')
 
 
+### Join class endpoint
+@app.route('/api/join-class', methods=['POST'])
+def join_class():
+    class_code = request.data.decode('utf-8')
+    print('joining class', class_code)
+    return redirect(STUDENT_HOME)
 
 if __name__ == "__main__":
     app.run(debug = True)
