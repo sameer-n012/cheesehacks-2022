@@ -343,9 +343,11 @@ def addToPresentList(student, class_code):
     absent_set = set(classDF.loc[classDF['code'] == class_code, 'absent'].values[0].split(','))
     present_set = set(classDF.loc[classDF['code'] == class_code, 'present'].values[0].split(','))
     
-    if student in absent_set:
-        absent_set.remove(student)
-        present_set.add(student)
+    for student_email in absent_set:
+        if student_email.startswith(student):
+            absent_set.remove(student)
+            present_set.add(student)
+            break
 
     classDF.loc[classDF['code'] == class_code, 'present'] = ",".join(present_set)
     classDF.loc[classDF['code'] == class_code, 'absent'] = ",".join(absent_set)
