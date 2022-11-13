@@ -14,7 +14,7 @@ UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 STUDENT_HOME = '/student'
-TEACHER_HOME = '/adminhome'
+TEACHER_HOME = '/admin'
 
 
 # Serve up frontend
@@ -119,7 +119,7 @@ def isEmail(email):
 
 @app.route('/api/teacher_sign_up', methods=['GET', 'POST'])
 def teacher_sign_up():
-    return redirect("/AdminHome")
+    return redirect(TEACHER_HOME)
 
 ### Join class endpoint
 @app.route('/api/join-class', methods=['POST'])

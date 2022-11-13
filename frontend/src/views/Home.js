@@ -36,8 +36,8 @@ export default function Home() {
 
 
             {/* Sign Up Buttons */}
-            <Link to="/AdminHome" className="button button1">Teacher Sign Up</Link>
-            <Link to="/Student" className="button button2">Student Sign Up</Link>
+            <Link to="/admin" className="button button1">Teacher Sign Up</Link>
+            <Link to="/student" className="button button2">Student Sign Up</Link>
         </div>
     )
 }

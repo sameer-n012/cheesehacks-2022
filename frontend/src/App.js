@@ -16,7 +16,7 @@ function App() {
                 <Route path='/' element={<Home />} />
                 <Route path='/student' element={<StudentHome />} />
                 <Route path='/upload' element={<StudentUpload />} />
-                <Route path='/adminhome' element={<AdminHome />} />
+                <Route path='/admin' element={<AdminHome />} />
                 <Route path='/detect' element={<FaceDetection />} />
                 {/* Add other routes here */}
                 <Route path='*' element={<NotFound />} />
