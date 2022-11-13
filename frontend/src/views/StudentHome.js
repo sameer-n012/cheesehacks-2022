@@ -11,11 +11,12 @@ export default function StudentHome() {
     const [classes, setClasses] = useState([{}])
 
     useEffect(() => { //TODO flask fetch
-        fetch('/getclasses/').then(
-            response => response.json()
-        ).then(
-            data => setClasses(data.myData)
-        )
+        // fetch('/api/get-classes/').then(
+        //     response => response.json()
+        // ).then(
+        //     data => setClasses(data.myData)
+        // )
+        console.log('fetching classes')
     }, []);
 
     const sampleClasses = [
@@ -43,7 +44,7 @@ export default function StudentHome() {
                 {currentUser != null ? (
                     <Accordion alwaysOpen>
                         {sampleClasses.map((c) => (
-                            <Accordion.Item eventKey={c.joincode}>
+                            <Accordion.Item eventKey={c.joincode} key={c.joincode}>
                                 <Accordion.Header className='bg-red'>{c.name}</Accordion.Header>
                                 <Accordion.Body>
                                     <p>Join Code: {c.joincode}</p>
