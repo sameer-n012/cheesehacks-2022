@@ -343,9 +343,14 @@ def addToClass(student, class_code):
 
 def addToPresentList(student, class_code):
     classDF = pd.read_csv('./classes.csv', keep_default_na=False)
+    classDF['code'] = classDF['code'].astype(str)
 
     absent_set = set(classDF.loc[classDF['code'] == class_code, 'absent'].values[0].split(','))
     present_set = set(classDF.loc[classDF['code'] == class_code, 'present'].values[0].split(','))
+    if("" in present_set):
+        present_set.remove("")
+    if("" in absent_set):
+        absent_set.remove("")
     
     for student_email in absent_set:
         if student_email.startswith(student):
@@ -361,29 +366,40 @@ def addToPresentList(student, class_code):
 
 def addToAbsentList(student, class_code):
     classDF = pd.read_csv('./classes.csv', keep_default_na=False)
+    classDF['code'] = classDF['code'].astype(str)
 
     # Add a given student to the absent list of a given class
     # And if they're on the present list, remove them from there
     absent_set = set(classDF.loc[classDF['code'] == class_code, 'absent'].values[0].split(','))
-    absent_set.add(student)
-    absent_set = ",".join(absent_set)
-    classDF.loc[classDF['code'] == class_code, 'absent'] = absent_set
 
     present_set = set(classDF.loc[classDF['code'] == class_code, 'present'].values[0].split(','))
+    if("" in present_set):
+        present_set.remove("")
+    if("" in absent_set):
+        absent_set.remove("")
+
     if student in present_set:
         present_set.remove(student)
         present_set = ",".join(present_set)
         classDF.loc[classDF['code'] == class_code, 'present'] = present_set
     else:
-        classDF.loc[classDF['code'] == class_code, 'class_size'] = len(present_set) + len(absent_set.split(","))
-
+        classDF.loc[classDF['code'] == class_code, 'class_size'] = len(present_set) + len(absent_set) + 1
+    
+    absent_set.add(student)
+    absent_set = ",".join(absent_set)
+    classDF.loc[classDF['code'] == class_code, 'absent'] = absent_set
     classDF.to_csv('./classes.csv', index=False)
 
 def moveAllToAbsent(class_code):
     classDF = pd.read_csv('./classes.csv', keep_default_na=False)
+    classDF['code'] = classDF['code'].astype(str)
 
     absent_set = set(classDF.loc[classDF['code'] == class_code, 'absent'].values[0].split(','))
     present_set = set(classDF.loc[classDF['code'] == class_code, 'present'].values[0].split(','))
+    if("" in present_set):
+        present_set.remove("")
+    if("" in absent_set):
+        absent_set.remove("")
     absent_set = absent_set.union(present_set)
 
     absentees = ",".join(absent_set)
@@ -420,14 +436,17 @@ def get_attendance():
     classid = request.args.get('classid', None)
     print(classid)
     classDF = pd.read_csv('./classes.csv', keep_default_na=False)
+    classDF['code'] = classDF['code'].astype(str)
     presentlist = classDF.loc[classDF['code'] == classid].iloc[0]['present'].split(",")
     absentlist = classDF.loc[classDF['code'] == classid].iloc[0]['absent'].split(",")
     print(presentlist, absentlist)
     out = "email,attendance\n"
     for s in presentlist:
-        out += s + "," + "Present\n"
+        if s != "":
+            out += s + "," + "Present\n"
     for s in absentlist:
-        out += s + "," + "Absent\n"
+        if s != "":
+            out += s + "," + "Absent\n"
     return out
 
 
@@ -452,11 +471,14 @@ def get_classes():
             continue
         print(classDF.loc[classDF['code'] == c])
         cline = classDF.loc[classDF['code'] == c].iloc[0]
+        num_present = len(cline['present'].split(","))
+        if "" in cline['present'].split(","):
+            num_present -= 1
         out.append({
             "code": cline["code"],
             "name": cline["name"],
             "present": bool(userid in cline["present"].split(",")),
-            "num_present": min(len(cline["present"].split(",")), int(cline["class_size"])),
+            "num_present": min(num_present, int(cline["class_size"])),
             "class_size": int(cline["class_size"])
         })
     print(classes)

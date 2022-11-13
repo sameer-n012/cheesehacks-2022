@@ -1,7 +1,11 @@
 import '../App.css'
 import Form from 'react-bootstrap/Form';
+import { Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 export default function UploadForm() {
+    const navigate = useNavigate();
+
 
     return (
         <div>
@@ -13,6 +17,7 @@ export default function UploadForm() {
                     </Form.Group>
                     
                     <input type="submit" value="Upload" className="btn btn-outline-dark w-25 m-3"/>
+                    <button onClick={()=>{navigate('/student')}} className="btn btn-outline-dark w-25 m-3">Back</button>
                 </div>
             </form>
         </div>
