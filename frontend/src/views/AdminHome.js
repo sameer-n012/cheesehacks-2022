@@ -1,6 +1,17 @@
+import clipboardy from 'clipboardy';
 import Header from '../components/Header'
 import { useEffect, useState } from 'react'
-import { Container, Accordion, Col, Row, Button} from 'react-bootstrap'
+import { Container, Accordion, Button} from 'react-bootstrap'
+
+async function copyFunction(joincode) {
+	await clipboardy.write(joincode);
+	const text = await clipboardy.read();
+	console.log(text); // 'butter'
+}
+
+function exportToCSV(){
+
+}
 
 export default function AdminHome() {
 
@@ -25,6 +36,9 @@ export default function AdminHome() {
         }
     ];
 
+
+	
+
 	return (
 
 		
@@ -34,7 +48,7 @@ export default function AdminHome() {
 		
 			<ul>
 
-			<Container className=''>
+			<Container className='p-4 align-items-center justify-content-center'>
                 <Accordion alwaysOpen>
                     {sampleClasses.map((c) => (
                         <Accordion.Item eventKey={c.joincode}>
@@ -44,16 +58,16 @@ export default function AdminHome() {
 									<Container className='d-flex flex-column p-2 align-items-center justify-content-center'>
 										<Container className='d-flex w-50'>
 											<p>Join Code: {c.joincode}</p>
-											<Button type="button" class="btn btn-outline-danger">Copy</Button>
+											<button class="btn btn-outline-danger" onClick={copyFunction(c.joincode)} >Copy</button>
 										</Container>
 										<Container className='d-flex w-50 p-2 align-items-center justify-content-center'>
 											<p>Today's Attendance: {c.attendance.length + '/' + c.classSize}</p>
-											<Button type="button" class="btn btn-outline-danger">Export to CSV</Button>
+											<button  class="btn btn-outline-danger">Export to CSV</button>
 										</Container>
 									
 									</Container>
 									<Container className='d-flex align-items-center justify-content-center'>
-										<Button type="button" class="btn btn-outline-danger">Launch Button</Button>
+										<a href="/detect" class="btn btn-outline-danger btn-lg" role="button"> Launch Button </a>
 									</Container>
 								</Container>
                             </Accordion.Body>
