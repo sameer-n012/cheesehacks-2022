@@ -65,6 +65,7 @@ export default function Header({page}) {
         );
         console.log('joining class ' + className);
         handleClose();
+        window.location.replace(window.location.href);
     }
 
     const createClassSubmit = () => {
@@ -85,6 +86,7 @@ export default function Header({page}) {
         );
         console.log('creating class ' + className);
         handleClose();
+        window.location.replace(window.location.href);
         
     }
 

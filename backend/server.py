@@ -115,7 +115,7 @@ def create_class2():
     f.write(str(class_code) + "," + class_name.replace(",", "") + ",,,0\n")
     f.close()
     print("Class " + class_name + " with code " + str(class_code) + " was created")
-    addToClass(userid, class_code)
+    addToClass(userid, str(class_code))
 
     return str(class_code)
 
@@ -231,7 +231,7 @@ def detect_face_from_img(class_code):
                     min_idx = idx
             if min_idx is not None:
                 name = known_face_names[min_idx]
-                mark_as_present(name)
+                addToPresentList(name, class_code)
                 return name
             else:
                 return 'FAILED'
@@ -324,17 +324,18 @@ def join_class():
 def addToClass(student, class_code):
     classDF = pd.read_csv('./classes.csv', keep_default_na=False)
     userDF = pd.read_csv('./users.csv', keep_default_na=False)
+    print(classDF)
 
-    if class_code not in classDF['code']:
-        raise Exception()
+    if class_code not in classDF['code'].values:
+        raise Exception("WTF is this class code", class_code)
 
     # Change class list a student is in by adding the class code given
-    userDF.loc[userDF['email'] == userid, 'classes'] = userDF.loc[userDF['email'] == userid, 'classes'] + ',' + class_code
+    userDF.loc[userDF['email'] == student, 'classes'] = userDF.loc[userDF['email'] == student, 'classes'] + ',' + class_code
 
-    userDF.to_csv('./classes.csv')
+    userDF.to_csv('./users.csv', index=False)
     print("Class " + str(class_code) + " was joined")
 
-    return str(class_name)
+    return str(class_code)
 
 def addToPresentList(student, class_code):
     classDF = pd.read_csv('./classes.csv', keep_default_na=False)
@@ -439,7 +440,7 @@ def get_classes():
             "code": cline["code"],
             "name": cline["name"],
             "present": bool(userid in cline["present"].split(",")),
-            "num_present": len(cline["present"].split(",")),
+            "num_present": min(len(cline["present"].split(",")), int(cline["class_size"])),
             "class_size": int(cline["class_size"])
         })
     print(classes)
