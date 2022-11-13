@@ -10,6 +10,7 @@ from flask_cors import CORS, cross_origin
 import cv2
 import csv
 from datetime import datetime
+import pandas as pd
 
 from facenet_pytorch import MTCNN, InceptionResnetV1
 from PIL import Image
@@ -56,7 +57,7 @@ def make_images_and_encodings():
             else:
                 print('got NONE embedding')
 
-make_images_and_encodings()
+#make_images_and_encodings()
 
 
 app = Flask(__name__, static_folder='../frontend/build')
@@ -253,7 +254,24 @@ def get_attendance():
 @app.route('/api/get-classes', methods=['GET'])
 def get_classes():
     # TODO
-    return redirect(TEACHER_HOME)
+    userid = request.args.get('userid', None)
+    print(userid)
+    userDf = pd.read_csv('./users.csv')
+    classDF = pd.read_csv('./classes.csv', keep_default_na=False)
+    classes = userDf.loc[userDf['email'] == userid].iloc[0]['classes'].split(",")
+    out = []
+    for c in classes:
+        cline = classDF.loc[classDF['code'] == c].iloc[0]
+        out.append({
+            "code": cline["code"],
+            "name": cline["name"],
+            "present": bool(userid in cline["present"].split(",")),
+            "num_present": len(cline["present"].split(",")),
+            "class_size": int(cline["class_size"])
+        })
+    print(classes)
+    print(out)
+    return out
 
 if __name__ == "__main__":
     app.run(debug=True)

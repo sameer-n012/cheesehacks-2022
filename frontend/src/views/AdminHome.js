@@ -15,6 +15,11 @@ async function copyFunction(joincode) {
 export default function AdminHome() {
 
     const navigate = useNavigate();
+    
+    const currentUser = localStorage.getItem('current_userid')
+    console.log(currentUser)
+
+    const [classes, setClasses] = useState([])
 
     useEffect(() => { //TODO flask fetch
         
@@ -24,35 +29,36 @@ export default function AdminHome() {
         };
 
         let response = -1
-        fetch('/api/get-classes', requestOptions).then(
-            response => response.status 
+        fetch('/api/get-classes?userid=' + currentUser, requestOptions).then(
+            response => response.json() 
         ).then(
-            status => { response = status; }
+            data => setClasses(data)
         );
 
         console.log('fetching classes')
-    }, []);
+        console.log(classes)
+    }, [currentUser]);
 
-	const sampleClasses = [
-        {
-            name: 'c1',
-            joincode: 'aj09iu231je',
-			attendance: ['s1', 's2'],
-            classSize: 150
-        },
-        {
-            name: 'c2',
-            joincode: 'jeoij2e19je',
-			attendance: ['s1', 's2'],
-            classSize: 150
-        },
-        {
-            name: 'c3',
-            joincode: 'cxmzf98201',
-			attendance: ['s1', 's2'],
-            classSize: 150
-        }
-    ];
+	// const sampleClasses = [
+    //     {
+    //         name: 'c1',
+    //         joincode: 'aj09iu231je',
+	// 		attendance: ['s1', 's2'],
+    //         classSize: 150
+    //     },
+    //     {
+    //         name: 'c2',
+    //         joincode: 'jeoij2e19je',
+	// 		attendance: ['s1', 's2'],
+    //         classSize: 150
+    //     },
+    //     {
+    //         name: 'c3',
+    //         joincode: 'cxmzf98201',
+	// 		attendance: ['s1', 's2'],
+    //         classSize: 150
+    //     }
+    // ];
 
     const exportToCSV = () => {
         // TODO get attendance
@@ -97,18 +103,18 @@ export default function AdminHome() {
 
 			<Container className='p-4 align-items-center justify-content-center'>
                 <Accordion alwaysOpen>
-                    {sampleClasses.map((c) => (
-                        <Accordion.Item eventKey={c.joincode}>
+                    {classes.map((c) => (
+                        <Accordion.Item eventKey={c.code} key={c.code}>
                             <Accordion.Header className=''>{c.name}</Accordion.Header>
                             <Accordion.Body>
                                 <Container className='d-flex flex-row p-2 align-items-center justify-content-center'>
                                     <Container className='d-flex p-2 flex-column align-items-center justify-content-around'>
-                                        <p>Join Code: {c.joincode}</p>
-                                        <Button variant='outline-danger' onClick={() => {navigate('/detect')}}> Launch Detection </Button>
+                                        <p>Join Code: {c.code}</p>
+                                        <Button variant='outline-dark' onClick={() => {navigate('/detect')}}> Launch Detection </Button>
                                     </Container>
                                     <Container className='d-flex p-2 flex-column align-items-center justify-content-around'>
-                                        <p>Today's Attendance: {c.attendance.length + '/' + c.classSize}</p>
-                                        <Button  variant="outline-danger" onClick={exportToCSV}>Export to CSV</Button>
+                                        <p>Today's Attendance: {c.num_present + '/' + c.class_size}</p>
+                                        <Button  variant="outline-dark" onClick={exportToCSV}>Export to CSV</Button>
                                     </Container>
                                 </Container>
                             </Accordion.Body>
