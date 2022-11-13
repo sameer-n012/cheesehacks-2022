@@ -218,19 +218,19 @@ def detect_face_from_img(class_code):
             img_embedding = resnet(img_cropped.unsqueeze(0))
 
             # matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
-            distance = None
+            similarity = None
             cos = CosineSimilarity()
-            min_idx = None
+            max_idx = None
             get_images_embeddings() # don't mess with class code
             print(f"LEN:  {len(known_face_encodings)}")
             for idx in range(len(known_face_encodings)):
                 cur_embedding = torch.from_numpy(known_face_encodings[idx])
                 output = cos(cur_embedding, img_embedding)[0].item()
-                if distance is None or output < distance:
-                    distance = output
-                    min_idx = idx
-            if min_idx is not None:
-                name = known_face_names[min_idx]
+                if similarity is None or output > similarity:
+                    similarity = output
+                    max_idx = idx
+            if max_idx is not None:
+                name = known_face_names[max_idx]
                 addToPresentList(name, class_code)
                 return name
             else:
