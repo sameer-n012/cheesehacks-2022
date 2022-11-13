@@ -11,11 +11,12 @@ export default function StudentHome() {
     const [classes, setClasses] = useState([{}])
 
     useEffect(() => { //TODO flask fetch
-        fetch('/api/getClasses/').then(
-            response => response.json()
-        ).then(
-            data => setClasses(data.myData)
-        )
+        // fetch('/api/get-classes/').then(
+        //     response => response.json()
+        // ).then(
+        //     data => setClasses(data.myData)
+        // )
+        console.log('fetching classes')
     }, []);
 
     const sampleClasses = [
