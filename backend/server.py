@@ -16,7 +16,8 @@ from PIL import Image
 from io import BytesIO
 import base64
 from torch.nn import CosineSimilarity
-
+import pandas as pd
+from html_error_outputs import *
 
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -206,17 +207,40 @@ def detect_face_from_img(class_code):
 ### Email Check route
 @app.route('/api/email_check', methods=['GET', 'POST'])
 def email_check():
-    # print(request.form['email'])
-    if 'email' not in request.form:
-        pass
-    else:
-        email = request.form['email']
-        if not isEmail:
-            return Response("{'message': 'Invalid! Email is not registered'}", 
-                status=200, mimetype='application/json')
-    # return redirect('/')
+    db = pd.read_csv('users.csv')
 
- 
+    # Redirect to same page if request does not contain email
+    if 'email' not in request.form:
+        return redirect('/')
+
+    email = request.form['email']
+    # Check if email is valid 
+    if not isEmail(email):
+        return email_invalid_error_page
+
+    # Check if email is in database
+    if not isRegistered(email, db):
+        return email_unregistered_error_page
+    
+    # Redirect to corresponding page
+    userType = db.loc[db['email'] == email, 'userType'].values[0]
+    print(userType)
+    if userType == 'student':
+        return redirect(STUDENT_HOME)
+    elif userType == 'teacher':
+        return redirect(TEACHER_HOME)
+    else:
+        return redirect('/')
+
+
+def isRegistered(email, db):
+    # Check if email is in database
+    print(db)
+    if email in db['email'].values:
+        return True
+    return False
+
+
 def isEmail(email):
     try:
       # validate and get info
@@ -231,7 +255,22 @@ def isEmail(email):
 
 @app.route('/api/teacher_sign_up', methods=['GET', 'POST'])
 def teacher_sign_up():
-    return redirect(TEACHER_HOME)
+    db = pd.read_csv('users.csv')
+
+    if 'email' not in request.form:
+        return redirect('/')
+    email = request.form['email']
+    # Check if email is valid
+    if not isEmail(email):
+        return email_invalid_error_page
+
+    if isRegistered(email, db):
+        return email_registered_error_page
+    else:
+        # Add teacher to database
+        db = db.append({'email': email, 'userType': 'teacher', 'imgUrl': email.split("@")[0]}, ignore_index=True)
+        db.to_csv('users.csv', index=False)
+        return redirect(TEACHER_HOME)
 
 ### Join class endpoint
 @app.route('/api/join-class', methods=['POST'])
@@ -243,17 +282,36 @@ def join_class():
 
 @app.route('/api/student_sign_up', methods=['GET', 'POST'])
 def student_sign_up():
-    return redirect(STUDENT_HOME)
+    db = pd.read_csv('users.csv')
+
+    if 'email' not in request.form:
+        return redirect('/')
+    
+    email = request.form['email']
+    # Check if email is valid
+    if not isEmail(email):
+        return email_invalid_error_page
+    
+    # Check if email is in database
+    if isRegistered(email, db):
+        return email_registered_error_page
+    else:
+        # Add teacher to database
+        db = db.append({'email': email, 'userType': 'student', 'imgUrl': email.split("@")[0]}, ignore_index=True)
+        db.to_csv('users.csv', index=False)
+        return redirect(STUDENT_HOME)
 
 @app.route('/api/get-attendance', methods=['GET'])
 def get_attendance():
     # TODO
     return redirect(TEACHER_HOME)
 
+
 @app.route('/api/get-classes', methods=['GET'])
 def get_classes():
     # TODO
     return redirect(TEACHER_HOME)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
