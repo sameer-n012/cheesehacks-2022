@@ -61,13 +61,11 @@ def get_images_embeddings():
         print("URL " + url)
         suffix = url.split('.')[-1]
         prefix = url.split('.')[0]
-        if suffix == "npy":
-            print('added')
-            known_face_encodings.append(np.load(os.path.join(UPLOAD_FOLDER, url)))
-        else:
+        img_path = os.path.join(UPLOAD_FOLDER, url)
+        if img_path not in image_list and suffix != "npy":
+            known_face_names.append(prefix)
+            known_face_encodings.append(np.load(os.path.join(UPLOAD_FOLDER, prefix + ".npy")))
             image_list.append(os.path.join(UPLOAD_FOLDER, url))
-        if prefix not in known_face_names:
-                known_face_names.append(prefix)
 
 
 app = Flask(__name__, static_folder='../frontend/build')
@@ -222,7 +220,6 @@ def detect_face_from_img(class_code):
             cos = CosineSimilarity()
             max_idx = None
             get_images_embeddings() # don't mess with class code
-            print(f"LEN:  {len(known_face_encodings)}")
             for idx in range(len(known_face_encodings)):
                 cur_embedding = torch.from_numpy(known_face_encodings[idx])
                 output = cos(cur_embedding, img_embedding)[0].item()
