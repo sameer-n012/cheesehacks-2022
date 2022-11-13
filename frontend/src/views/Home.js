@@ -1,20 +1,6 @@
 import {Link} from 'react-router-dom';
 
 export default function Home() {
-
-    async function sendMessage() {
-        
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({email: document.getElementById('email').value})
-        }
-    
-        const rawRes = await fetch('/api/email-check/', requestOptions)
-        const jsonRes = await rawRes.text()
-        alert(`json response: ${jsonRes}`)
-    }
-
     return (
         <div class="center">
             <h1>Welcome to Face Attendance!</h1>
