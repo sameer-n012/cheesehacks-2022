@@ -89,16 +89,19 @@ def create_class():
 
 
 ### Create class endpoint 2
-@app.route('/api/create-class2', methods=['GET', 'POST'])
+@app.route('/api/create-class2', methods=['POST'])
 def create_class2():
     class_name = request.data.decode('utf-8')
     class_code = generate_class_code(class_name)
-    print("Class " + class_name + " with code " + class_code + " was created")
+    f = open("./classes.csv", "a")
+    f.write(str(class_code) + "," + class_name.replace(",", "") + ",,,0\n")
+    f.close()
+    print("Class " + class_name + " with code " + str(class_code) + " was created")
 
-    return redirect(TEACHER_HOME)
+    return str(class_code)
 
 ### Create a unique class code # TODO make it unique
-def get_class_code(class_name):
+def generate_class_code(class_name):
     return hash(class_name) % (10**10)
 
 ### Student upload image endpoint
@@ -228,8 +231,20 @@ def teacher_sign_up():
 @app.route('/api/join-class', methods=['POST'])
 def join_class():
     class_code = request.data.decode('utf-8')
+    userid = request.args.get('userid', None)
     print('joining class', class_code)
-    return redirect(STUDENT_HOME)
+
+    classDF = pd.read_csv('./classes.csv', keep_default_na=False)
+    userDF = pd.read_csv('./users.csv', keep_default_na=False)
+
+    if class_code not in classDF['code']:
+        raise Exception()
+
+
+    userDF.to_csv('./classes.csv')
+    print("Class " + str(class_code) + " was joined")
+
+    return str(class_name)
 
 
 @app.route('/api/student_sign_up', methods=['GET', 'POST'])

@@ -58,15 +58,11 @@ export default function Header({page}) {
             body: className
         };
 
-        let response = -1
         fetch('/api/join-class', requestOptions).then(
             response => response.status 
         ).then(
-            status => { response = status; }
+            status => { console.log(status) }
         );
-        if(response != 200) {
-            alert("Sorry, something went wrong")
-        }
         console.log('joining class ' + className);
         handleClose();
     }
@@ -82,16 +78,12 @@ export default function Header({page}) {
             body: className
         };
 
-        let response = -1
         fetch('/api/create-class2', requestOptions).then(
             response => response.status 
         ).then(
-            status => { response = status; }
+            status => { console.log(status); }
         );
-        if(response != 200) {
-            alert("Sorry, something went wrong")
-        }
-        console.log('joining class ' + className);
+        console.log('creating class ' + className);
         handleClose();
         
     }
