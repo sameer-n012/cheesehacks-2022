@@ -26,13 +26,14 @@ export default function Home() {
         <div class="center">
             <h1>Welcome to Face Attendance!</h1>
             
-            {/* Form Padding */}
+            {/* Form Padding 
             <form action="/api/email_check" method="POST">
                 <label for="email">Email:</label>
                 <input type="text" id="email" name="email"></input>
                 <br></br>
                 <input type="submit" value="Login" className='button submit' onClick={sendMessage}></input>
             </form>
+            */}
 
 
             {/* Sign Up Buttons */}
