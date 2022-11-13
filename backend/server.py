@@ -1,6 +1,6 @@
 from email_validator import validate_email, EmailNotValidError
 from urllib import response
-from flask import Flask, request, redirect, flash, render_template, url_for, send_from_directory, response
+from flask import Flask, request, redirect, flash, render_template, url_for, send_from_directory, Response
 from markupsafe import escape
 import os
 from werkzeug.utils import secure_filename
@@ -13,6 +13,9 @@ app.config['SESSION_TYPE'] = 'filesystem'
 
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+STUDENT_HOME = '/student'
+TEACHER_HOME = '/admin'
 
 
 # Serve up frontend
@@ -39,7 +42,20 @@ def create_class():
     return redirect('/class')
 
 
-# Student upload image endpoint
+### Create class endpoint 2
+@app.route('/api/create-class2', methods=['GET', 'POST'])
+def create_class2():
+    class_name = request.data.decode('utf-8')
+    class_code = generate_class_code(class_name)
+    print("Class " + class_name + " with code " + class_code + " was created")
+
+    return redirect(TEACHER_HOME)
+
+### Create a unique class code # TODO make it unique
+def get_class_code(class_name):
+    return hash(class_name) % (10**10)
+
+### Student upload image endpoint
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -75,9 +91,8 @@ def upload_file():
             return redirect('/upload')
     return redirect('/upload')
 
-# Create class endpoint
 
-
+### Email Check route
 @app.route('/api/email_check', methods=['GET', 'POST'])
 def email_check():
     # print(request.form['email'])
@@ -85,8 +100,10 @@ def email_check():
         pass
     else:
         email = request.form['email']
-        return isEmail(email)
-    return response()
+        if not isEmail:
+            return Response("{'message': 'Invalid! Email is not registered'}", 
+                status=200, mimetype='application/json')
+    # return redirect('/')
 
  
 def isEmail(email):
@@ -103,11 +120,20 @@ def isEmail(email):
 
 @app.route('/api/teacher_sign_up', methods=['GET', 'POST'])
 def teacher_sign_up():
-    return redirect("/AdminHome")
+    return redirect(TEACHER_HOME)
+
+### Join class endpoint
+@app.route('/api/join-class', methods=['POST'])
+def join_class():
+    class_code = request.data.decode('utf-8')
+    print('joining class', class_code)
+    return redirect(STUDENT_HOME)
+
 
 @app.route('/api/student_sign_up', methods=['GET', 'POST'])
 def student_sign_up():
     return redirect("/Student")
+
 
 if __name__ == "__main__":
     app.run(debug=True)

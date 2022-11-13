@@ -54,8 +54,8 @@ export default function StudentHome() {
                         ))}
                     </Accordion>
                 ) : (
-                    <Container className='d-flex p-5 align-items-center justify-content-center'>
-                        <p className='fs-4'>You must be logged in to access this page</p>
+                    <Container className='d-flex p-5 align-items-center justify-content-center' style={{marginTop: '10rem'}}>
+                        <p className='fs-4 mt-4'>You must be logged in to access this page</p>
                     </Container>
                 )}
             </Container>

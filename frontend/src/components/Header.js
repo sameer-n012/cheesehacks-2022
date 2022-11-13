@@ -48,30 +48,50 @@ export default function Header({page}) {
 
     const addClassSubmit = () => {
         // TODO make fetch request here
+        if(!className) {
+            return;
+        }
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: className
+        };
+
+        let response = -1
+        fetch('/api/join-class', requestOptions).then(
+            response => response.status 
+        ).then(
+            status => { response = status; }
+        );
+        if(response != 200) {
+            alert("Sorry, something went wrong")
+        }
         console.log('joining class ' + className);
         handleClose();
     }
 
     const createClassSubmit = () => {
-        // TODO make fetch request here
-        console.log('here')
+        if(!className) {
+            return;
+        }
 
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 'class_code': className })
+            body: className
         };
 
-        var params = {
-          data: requestOptions
-        }
-
-        fetch('/api/create-class', params).then(
-            response => response.json() 
+        let response = -1
+        fetch('/api/create-class2', requestOptions).then(
+            response => response.status 
         ).then(
-            data => console.log(data)
+            status => { response = status; }
         );
-        console.log('creating class ' + className);
+        if(response != 200) {
+            alert("Sorry, something went wrong")
+        }
+        console.log('joining class ' + className);
         handleClose();
         
     }
