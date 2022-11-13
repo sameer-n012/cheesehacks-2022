@@ -1,0 +1,11 @@
+code,name,present,absent,class_size
+7462971004,CS 540,snarendran@wisc.edu,djpaul2@wisc.edu,2
+4780187410,CS 577,djpaul2@wisc.edu,"yprabhu2@wisc.edu,snarendran@wisc.edu",3
+5671294082,CS 839,yprabhu2@wisc.edu,"djpaul2@wisc.edu,snarendran@wisc.edu",3
+
+
+email,classes,userType,imgUrl
+snarendran@wisc.edu,"7462971004,4780187410,5671294082",student,snarendran
+djpaul2@wisc.edu,"7462971004,4780187410,5671294082",student,djpaul2
+kgwilson2@wisc.edu,"7462971004,5671294082",teacher,kgwilson2
+yprabhu2@wisc.edu,"4780187410,5671294082",student,yprabhu2
