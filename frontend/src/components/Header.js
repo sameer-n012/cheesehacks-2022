@@ -54,8 +54,26 @@ export default function Header({page}) {
 
     const createClassSubmit = () => {
         // TODO make fetch request here
+        console.log('here')
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 'class_code': className })
+        };
+
+        var params = {
+          data: requestOptions
+        }
+
+        fetch('/api/create-class', params).then(
+            response => response.json() 
+        ).then(
+            data => console.log(data)
+        );
         console.log('creating class ' + className);
         handleClose();
+        
     }
 
     // TODO insert application name
