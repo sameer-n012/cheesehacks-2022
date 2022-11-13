@@ -1,6 +1,6 @@
 from email_validator import validate_email, EmailNotValidError
 from urllib import response
-from flask import Flask, Response, request, redirect, flash, render_template, url_for, send_from_directory
+from flask import Flask, Response, request, redirect, flash, render_template, url_for, send_from_directory, jsonify
 from markupsafe import escape
 import os
 import numpy as np
@@ -344,7 +344,7 @@ def get_classes():
         })
     print(classes)
     print(out)
-    return out
+    return jsonify(out)
 
 
 if __name__ == "__main__":
