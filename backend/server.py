@@ -1,6 +1,6 @@
 from email_validator import validate_email, EmailNotValidError
 from urllib import response
-from flask import Flask, request, redirect, flash, render_template, url_for, send_from_directory
+from flask import Flask, request, redirect, flash, render_template, url_for, send_from_directory, Response
 from markupsafe import escape
 import os
 from werkzeug.utils import secure_filename
@@ -84,8 +84,10 @@ def email_check():
         pass
     else:
         email = request.form['email']
-        return isEmail(email)
-    return redirect("/")
+        if not isEmail:
+            return Response("{'message': 'Invalid! Email is not registered'}", 
+                status=200, mimetype='application/json')
+    # return redirect('/')
 
  
 def isEmail(email):
