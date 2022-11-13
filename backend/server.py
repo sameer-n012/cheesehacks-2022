@@ -93,16 +93,16 @@ def show_frontend(path):
 
 
 # Create class endpoint
-@app.route('/api/create-class', methods=['GET', 'POST'])
-def create_class():
-    if 'class_code' not in request.form:  # class_code must match name attribute of html form
-        flash('No class code')
-        return redirect(request.url)
-    class_code = request.form['class_code']
-    class_path = os.path.join(UPLOAD_FOLDER, class_code)
-    if not os.path.exists(class_path):
-        os.mkdir(class_path)
-    return redirect('/class')
+# @app.route('/api/create-class', methods=['GET', 'POST'])
+# def create_class():
+#     if 'class_code' not in request.form:  # class_code must match name attribute of html form
+#         flash('No class code')
+#         return redirect(request.url)
+#     class_code = request.form['class_code']
+#     class_path = os.path.join(UPLOAD_FOLDER, class_code)
+#     if not os.path.exists(class_path):
+#         os.mkdir(class_path)
+#     return redirect('/class')
 
 
 ### Create class endpoint 2
@@ -326,11 +326,15 @@ def addToClass(student, class_code):
     userDF = pd.read_csv('./users.csv', keep_default_na=False)
     print(classDF)
 
-    if class_code not in classDF['code'].values:
-        raise Exception("WTF is this class code", class_code)
+    # if class_code not in classDF['code'].values:
+    #     raise Exception("? ", class_code)
 
+    class_set = set(userDF.loc[userDF['email'] == student, 'classes'].iloc[0].split(","))
+    if("" in class_set):
+        class_set.remove("")
+    class_set.add(class_code)
     # Change class list a student is in by adding the class code given
-    userDF.loc[userDF['email'] == student, 'classes'] = userDF.loc[userDF['email'] == student, 'classes'] + ',' + class_code
+    userDF.loc[userDF['email'] == student, 'classes'] =  ",".join(class_set)
 
     userDF.to_csv('./users.csv', index=False)
     print("Class " + str(class_code) + " was joined")
@@ -432,11 +436,21 @@ def get_classes():
     # TODO
     userid = request.args.get('userid', None)
     print(userid)
-    userDf = pd.read_csv('./users.csv')
+    userDf = pd.read_csv('./users.csv', keep_default_na=False)
     classDF = pd.read_csv('./classes.csv', keep_default_na=False)
-    classes = userDf.loc[userDf['email'] == userid].iloc[0]['classes'].split(",")
+    classDF['code'] = classDF['code'].astype(str)
+    classes = str(userDf.loc[userDf['email'] == userid].iloc[0]['classes']).split(",")
+    print(classes)
+    if len(classes) == 1 and classes[0] == "":
+        return jsonify([])
+    elif len(classes) == 0:
+        return jsonify([])
+
     out = []
     for c in classes:
+        if c == "":
+            continue
+        print(classDF.loc[classDF['code'] == c])
         cline = classDF.loc[classDF['code'] == c].iloc[0]
         out.append({
             "code": cline["code"],
