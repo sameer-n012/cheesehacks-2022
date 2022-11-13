@@ -1,6 +1,7 @@
 import clipboardy from 'clipboardy';
 import Header from '../components/Header'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Container, Accordion, Button} from 'react-bootstrap'
 
 async function copyFunction(joincode) {
@@ -28,6 +29,8 @@ function exportToCSV(){
 }
 
 export default function AdminHome() {
+
+    const navigate = useNavigate();
 
 	const sampleClasses = [
         {
@@ -63,22 +66,16 @@ export default function AdminHome() {
                         <Accordion.Item eventKey={c.joincode}>
                             <Accordion.Header className=''>{c.name}</Accordion.Header>
                             <Accordion.Body>
-								<Container className='d-flex'>
-									<Container className='d-flex flex-column p-2 align-items-center justify-content-center'>
-										<Container className='d-flex w-50'>
-											<p>Join Code: {c.joincode}</p>
-											<button class="btn btn-outline-danger" id={c.joincode} onClick={e => {copyFunction(e.target.id)}} >Copy</button>
-										</Container>
-										<Container className='d-flex w-50 p-2 align-items-center justify-content-center'>
-											<p>Today's Attendance: {c.attendance.length + '/' + c.classSize}</p>
-											<button  class="btn btn-outline-danger" onClick={exportToCSV}>Export to CSV</button>
-										</Container>
-									
-									</Container>
-									<Container className='d-flex align-items-center justify-content-center'>
-										<a href="/detect" class="btn btn-outline-danger btn-lg" role="button"> Launch Button </a>
-									</Container>
-								</Container>
+                                <Container className='d-flex flex-row p-2 align-items-center justify-content-center'>
+                                    <Container className='d-flex p-2 flex-column align-items-center justify-content-around'>
+                                        <p>Join Code: {c.joincode}</p>
+                                        <Button variant='outline-danger' onClick={() => {navigate('/detect')}}> Launch Detection </Button>
+                                    </Container>
+                                    <Container className='d-flex p-2 flex-column align-items-center justify-content-around'>
+                                        <p>Today's Attendance: {c.attendance.length + '/' + c.classSize}</p>
+                                        <Button  variant="outline-danger" onClick={exportToCSV}>Export to CSV</Button>
+                                    </Container>
+                                </Container>
                             </Accordion.Body>
                         </Accordion.Item>
                     ))}

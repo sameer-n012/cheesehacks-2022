@@ -47,8 +47,10 @@ export default function StudentHome() {
                             <Accordion.Item eventKey={c.joincode} key={c.joincode}>
                                 <Accordion.Header className='bg-red'>{c.name}</Accordion.Header>
                                 <Accordion.Body>
-                                    <p>Join Code: {c.joincode}</p>
-                                    <p> Today's Attendance: {c.attend ? 'Yes' : 'No'}</p>
+                                    <Container className='d-flex justify-content-around'>
+                                        <p className='m-3'>Join Code: {c.joincode}</p>
+                                        <p className='m-3'> Today's Attendance: {c.attend ? 'Present' : 'Absent'}</p>
+                                    </Container>
                                 </Accordion.Body>
                             </Accordion.Item>
                         ))}
