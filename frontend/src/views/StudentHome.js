@@ -11,11 +11,19 @@ export default function StudentHome() {
     const [classes, setClasses] = useState([{}])
 
     useEffect(() => { //TODO flask fetch
-        // fetch('/api/get-classes/').then(
-        //     response => response.json()
-        // ).then(
-        //     data => setClasses(data.myData)
-        // )
+        
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        };
+
+        let response = -1
+        fetch('/api/get-classes', requestOptions).then(
+            response => response.status 
+        ).then(
+            status => { response = status; }
+        );
+
         console.log('fetching classes')
     }, []);
 
@@ -47,15 +55,17 @@ export default function StudentHome() {
                             <Accordion.Item eventKey={c.joincode} key={c.joincode}>
                                 <Accordion.Header className='bg-red'>{c.name}</Accordion.Header>
                                 <Accordion.Body>
-                                    <p>Join Code: {c.joincode}</p>
-                                    <p> Today's Attendance: {c.attend ? 'Yes' : 'No'}</p>
+                                    <Container className='d-flex justify-content-around'>
+                                        <p className='m-3'>Join Code: {c.joincode}</p>
+                                        <p className='m-3'> Today's Attendance: {c.attend ? 'Present' : 'Absent'}</p>
+                                    </Container>
                                 </Accordion.Body>
                             </Accordion.Item>
                         ))}
                     </Accordion>
                 ) : (
-                    <Container className='d-flex p-5 align-items-center justify-content-center'>
-                        <p className='fs-4'>You must be logged in to access this page</p>
+                    <Container className='d-flex p-5 align-items-center justify-content-center' style={{marginTop: '10rem'}}>
+                        <p className='fs-4 mt-4'>You must be logged in to access this page</p>
                     </Container>
                 )}
             </Container>

@@ -20,17 +20,19 @@ export default function Home() {
             <h1>Welcome to Face Attendance!</h1>
             <br></br>
             
-            {/* Form Padding */}
-            {/* <div class="form">
+            {/* Form Padding 
+            <form action="/api/email_check" method="POST">
                 <label for="email">Email:</label>
                 <input type="text" id="email" name="email"></input>
                 <br></br>
-                <input value="Login" className='button submit' onClick={sendMessage}></input>
-            </div> */}
-            
+                <input type="submit" value="Login" className='button submit' onClick={sendMessage}></input>
+            </form>
+            */}
+
+
             {/* Sign Up Buttons */}
-            <Link to="/AdminHome" className="button button1 me-2">Teacher Sign Up</Link>
-            <Link to="/Student" className="button button2 ms-1">Student Sign Up</Link>
+            <Link to="/admin" className="button button1">Teacher Sign Up</Link>
+            <Link to="/student" className="button button2">Student Sign Up</Link>
         </div>
     )
 }

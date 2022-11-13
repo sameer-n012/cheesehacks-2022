@@ -1,6 +1,7 @@
 import clipboardy from 'clipboardy';
 import Header from '../components/Header'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Container, Accordion, Button} from 'react-bootstrap'
 
 async function copyFunction(joincode) {
@@ -9,25 +10,28 @@ async function copyFunction(joincode) {
 	console.log(text); // 'butter'
 }
 
-function exportToCSV(){
-	const rows = [
-		["name1", "city1", "some other info"],
-		["name2", "city2", "more info"]
-	];
-	
-	let csvContent = "data:text/csv;charset=utf-8," 
-		+ rows.map(e => e.join(",")).join("\n");
 
-	var encodedUri = encodeURI(csvContent);
-	var link = document.createElement("a");
-	link.setAttribute("href", encodedUri);
-	link.setAttribute("download", "my_data.csv");
-	document.body.appendChild(link); // Required for FF
-	
-	link.click();
-}
 
 export default function AdminHome() {
+
+    const navigate = useNavigate();
+
+    useEffect(() => { //TODO flask fetch
+        
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        };
+
+        let response = -1
+        fetch('/api/get-classes', requestOptions).then(
+            response => response.status 
+        ).then(
+            status => { response = status; }
+        );
+
+        console.log('fetching classes')
+    }, []);
 
 	const sampleClasses = [
         {
@@ -50,12 +54,46 @@ export default function AdminHome() {
         }
     ];
 
+    const exportToCSV = () => {
+        // TODO get attendance
+
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        };
+
+        let response = -1
+        fetch('/api/get-attendance', requestOptions).then(
+            response => response.status 
+        ).then(
+            status => { response = status; }
+        );
+
+        const rows = [
+            ["", "d1", "d2", "d3", "d4", "d5", "d6"],
+            ["s1", "x", "o", "x", "x", "x", "o"],
+            ["s2", "x", "x", "x", "o", "x", "x"]
+        ];
+        
+        let csvContent = "data:text/csv;charset=utf-8," 
+            + rows.map(e => e.join(",")).join("\n");
+    
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+
+        let dateStr = new Date().toISOString().slice(0,10).replace(/-/g, "");
+
+        link.setAttribute("download", "attendance_" + dateStr + ".csv");
+        document.body.appendChild(link); // Required for FF
+        
+        link.click();
+    }
+
 	return (
 		
 		<div className='teacherhome'>
             <Header  page='teacher_home'/>
-
-			<ul>
 
 			<Container className='p-4 align-items-center justify-content-center'>
                 <Accordion alwaysOpen>
@@ -63,29 +101,23 @@ export default function AdminHome() {
                         <Accordion.Item eventKey={c.joincode}>
                             <Accordion.Header className=''>{c.name}</Accordion.Header>
                             <Accordion.Body>
-								<Container className='d-flex'>
-									<Container className='d-flex flex-column p-2 align-items-center justify-content-center'>
-										<Container className='d-flex w-50'>
-											<p>Join Code: {c.joincode}</p>
-											<button class="btn btn-outline-danger" id={c.joincode} onClick={e => {copyFunction(e.target.id)}} >Copy</button>
-										</Container>
-										<Container className='d-flex w-50 p-2 align-items-center justify-content-center'>
-											<p>Today's Attendance: {c.attendance.length + '/' + c.classSize}</p>
-											<button  class="btn btn-outline-danger" onClick={exportToCSV}>Export to CSV</button>
-										</Container>
-									
-									</Container>
-									<Container className='d-flex align-items-center justify-content-center'>
-										<a href="/detect" class="btn btn-outline-danger btn-lg" role="button"> Launch Button </a>
-									</Container>
-								</Container>
+                                <Container className='d-flex flex-row p-2 align-items-center justify-content-center'>
+                                    <Container className='d-flex p-2 flex-column align-items-center justify-content-around'>
+                                        <p>Join Code: {c.joincode}</p>
+                                        <Button variant='outline-danger' onClick={() => {navigate('/detect')}}> Launch Detection </Button>
+                                    </Container>
+                                    <Container className='d-flex p-2 flex-column align-items-center justify-content-around'>
+                                        <p>Today's Attendance: {c.attendance.length + '/' + c.classSize}</p>
+                                        <Button  variant="outline-danger" onClick={exportToCSV}>Export to CSV</Button>
+                                    </Container>
+                                </Container>
                             </Accordion.Body>
                         </Accordion.Item>
                     ))}
                 </Accordion>
 			</Container>
 				
-			</ul>
+			
 		</div>
 	);
 }
