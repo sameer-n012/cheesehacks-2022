@@ -33,7 +33,11 @@
 /* Image from: https://hougumlaw.com/home/light-website-backgrounds-light-color-background-images-light-color-background-images-for-website-1024x640/ */
 /* Code reference: https://stackoverflow.com/questions/20047364/how-to-give-the-background-image-path-in-css */
 body {
-  background-image: url("../public/background_image.jpg");
+  background-image: url("../public/background2.jpg"); 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 h1 {
