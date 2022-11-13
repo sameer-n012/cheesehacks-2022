@@ -9,7 +9,6 @@ export default function UploadForm() {
 
     return (
         <div>
-            <Header page=""/>
             <form method="POST" action="/api/upload" enctype="multipart/form-data">
                 <div className="d-flex flex-column align-items-center">
                     

@@ -1,8 +1,10 @@
 import {useEffect, useRef, useState} from 'react'
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import './FaceDetection.css'
 
 export default function FaceDetection() {
+
+	const navigate = useNavigate();
 
 	const [searchParams, _] = useSearchParams();
 	const [classCode, setClassCode] = useState('')
