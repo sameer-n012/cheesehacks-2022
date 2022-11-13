@@ -1,19 +1,25 @@
 import {useEffect, useRef, useState} from 'react'
+import { useSearchParams } from 'react-router-dom';
+import './FaceDetection.css'
 
 export default function FaceDetection() {
 
-	const UPLOADS_PER_SECOND = 10
+	const [searchParams, _] = useSearchParams();
+	const [classCode, setClassCode] = useState('')
+	useEffect(() => {
+		setClassCode(searchParams.get('classCode'))
+	}, [])
+
+	const UPLOADS_PER_SECOND = 5
 
 	// OVERALL FLOW:
 	// useEffect at the start triggers camera feed
 	const videoRef = useRef();
-	const inputRef = useRef();
-	const canvasRef = useRef();
-	const imageRef = useRef();
+
+	const [responseMsg, setResponseMsg] = useState('')
 
 	useEffect(() => {
 		startVideo()
-		getImageFromVideo()
 	}, [])
 
 	async function startVideo() {
@@ -36,46 +42,41 @@ export default function FaceDetection() {
 		return canvas.toDataURL('image/png');	
 	}
 
-	function getImageFromVideo() {
+	useEffect(() => {
 
 		setInterval( () => {
-			
-			//console.log('inside getImage function: ' + JSON.stringify(image))
-			sendImage(captureVideo(videoRef.current))
+
+			if (classCode) {
+				sendImage(captureVideo(videoRef.current))
+			}
 
 		}, 1000 / UPLOADS_PER_SECOND)
 		
-	}
+	}, [classCode])
 
 	async function sendImage(img) {
 
-		const classCode = inputRef.current.value
 		const formData = new FormData()
 		formData.append('image', img)
 		const requestOptions = {
 			method: 'POST',
 			body: formData
 		}
-		if (classCode) { // Truthy check, see if classCode is not empty string
-			const rawRes = await fetch('/api/detect/' + classCode, requestOptions)
-			const textRes = await rawRes.text()
-			console.log(`json response: ${textRes}`)
-		}
+		const rawRes = await fetch('/api/detect/' + classCode, requestOptions)
+		const textRes = await rawRes.text()
+		setResponseMsg("Found: " + textRes)
 
 	}
 
 
 	return (
-		<div>
-			<h1>This is the face detection page</h1>
-			<label htmlFor='class-code-input'>Type in your class code</label>
-			<input id="class-code-input" ref={inputRef} placeholder='Class code'/>
+		<div className="face-dec-page-wrapper">
+			<h2 className="face-dec-title">Face detection for class {classCode}</h2>
 			<div className='detector-area'>
 				<div className='detector-video'>
-					<video crossOrigin='anonymous' ref={videoRef} id="detect-video" autoPlay ></video>
+					<video crossOrigin='anonymous' ref={videoRef} id="detect-video" autoPlay></video>
 				</div>
-				<canvas ref={canvasRef}></canvas>
-				<img ref={imageRef}/>
+				<p className="response-msg">{responseMsg}‎ </p>
             </div>
 		</div>
 	);

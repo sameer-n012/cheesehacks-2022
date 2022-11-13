@@ -1,43 +1,29 @@
 import {Link} from 'react-router-dom';
 
-async function sendMessage() {
-    // const classCode = inputRef.current.value
-    //console.log('inside sendImage function: ' + JSON.stringify(img))
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        // body: JSON.stringify({image: img})
-    }
-    // if (classCode) { // Truthy check, see if classCode is not empty string
-    //     console.log("sending image: . . . ")
-    //     console.log(img)
-    //     const rawRes = await fetch('/api/email_check/' + classCode, requestOptions)
-    //     const jsonRes = await rawRes.json()
-    //     console.log(`json response: ${jsonRes.foundUser}`)
-    // }
-
-    const rawRes = await fetch('/api/email_check/', requestOptions)
-    const jsonRes = await rawRes.json()
-    alert(`json response: ${jsonRes.message}`)
-}
-
 export default function Home() {
+
+    const handleEmailChange = (e) => {
+        localStorage.setItem('current_userid', e.target.value);
+    }
+
     return (
         <div class="center">
             <h1>Welcome to Face Attendance!</h1>
+            <br></br>
             
-            {/* Form Padding */}
-            <form action="/api/email_check" method="POST">
+            {/* Form Padding  */}
+            <form className='form' action="/api/email_check" method="POST">
                 <label for="email">Email:</label>
-                <input type="text" id="email" name="email"></input>
+                <input type="text" id="email" name="email" onChange={(e) => {handleEmailChange(e)}}></input>
+                <input type="submit" value="Login" className='button submit m-3'></input>
                 <br></br>
-                <input type="submit" value="Login" className='button submit' onClick={sendMessage}></input>
+                <button className='button button1 m-2' formAction='/api/teacher_sign_up'> Teacher Sign Up </button>
+                <button className='button button2 m-2' formAction='/api/student_sign_up'> Student Sign Up </button>
             </form>
 
-
-            {/* Sign Up Buttons */}
-            <Link to="/admin" className="button button1">Teacher Sign Up</Link>
-            <Link to="/student" className="button button2">Student Sign Up</Link>
+            {/* Sign Up Buttons
+            <Link to="/admin" className="button button1 m-2">Teacher Sign Up</Link>
+            <Link to="/student" className="button button2 m-2">Student Sign Up</Link> */}
         </div>
     )
 }

@@ -8,7 +8,7 @@ export default function StudentHome() {
     const currentUser = localStorage.getItem('current_userid')
     console.log(currentUser)
 
-    const [classes, setClasses] = useState([{}])
+    const [classes, setClasses] = useState([])
 
     useEffect(() => { //TODO flask fetch
         
@@ -18,32 +18,33 @@ export default function StudentHome() {
         };
 
         let response = -1
-        fetch('/api/get-classes', requestOptions).then(
-            response => response.status 
+        fetch('/api/get-classes?userid=' + currentUser, requestOptions).then(
+            response => response.json() 
         ).then(
-            status => { response = status; }
+            data => setClasses(data)
         );
 
         console.log('fetching classes')
-    }, []);
+        console.log(classes)
+    }, [currentUser]);
 
-    const sampleClasses = [
-        {
-            name: 'c1',
-            joincode: 'aj09iu231je',
-            attend: true
-        },
-        {
-            name: 'c2',
-            joincode: 'jeoij2e19je',
-            attend: false
-        },
-        {
-            name: 'c3',
-            joincode: 'cxmzf98201',
-            attend: true
-        }
-    ];
+    // const sampleClasses = [
+    //     {
+    //         name: 'c1',
+    //         joincode: 'aj09iu231je',
+    //         attend: true
+    //     },
+    //     {
+    //         name: 'c2',
+    //         joincode: 'jeoij2e19je',
+    //         attend: false
+    //     },
+    //     {
+    //         name: 'c3',
+    //         joincode: 'cxmzf98201',
+    //         attend: true
+    //     }
+    // ];
 
 	return (
 		<div>
@@ -51,13 +52,13 @@ export default function StudentHome() {
             <Container className='p-4'>
                 {currentUser != null ? (
                     <Accordion alwaysOpen>
-                        {sampleClasses.map((c) => (
-                            <Accordion.Item eventKey={c.joincode} key={c.joincode}>
+                        {classes.map((c) => (
+                            <Accordion.Item eventKey={c.code} key={c.code}>
                                 <Accordion.Header className='bg-red'>{c.name}</Accordion.Header>
                                 <Accordion.Body>
                                     <Container className='d-flex justify-content-around'>
-                                        <p className='m-3'>Join Code: {c.joincode}</p>
-                                        <p className='m-3'> Today's Attendance: {c.attend ? 'Present' : 'Absent'}</p>
+                                        <p className='m-3'>Join Code: {c.code}</p>
+                                        <p className='m-3'> Today's Attendance: {c.present ? 'Present' : 'Absent'}</p>
                                     </Container>
                                 </Accordion.Body>
                             </Accordion.Item>
