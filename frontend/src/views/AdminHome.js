@@ -10,27 +10,28 @@ async function copyFunction(joincode) {
 	console.log(text); // 'butter'
 }
 
-function exportToCSV(){
-	const rows = [
-		["name1", "city1", "some other info"],
-		["name2", "city2", "more info"]
-	];
-	
-	let csvContent = "data:text/csv;charset=utf-8," 
-		+ rows.map(e => e.join(",")).join("\n");
 
-	var encodedUri = encodeURI(csvContent);
-	var link = document.createElement("a");
-	link.setAttribute("href", encodedUri);
-	link.setAttribute("download", "my_data.csv");
-	document.body.appendChild(link); // Required for FF
-	
-	link.click();
-}
 
 export default function AdminHome() {
 
     const navigate = useNavigate();
+
+    useEffect(() => { //TODO flask fetch
+        
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        };
+
+        let response = -1
+        fetch('/api/get-classes', requestOptions).then(
+            response => response.status 
+        ).then(
+            status => { response = status; }
+        );
+
+        console.log('fetching classes')
+    }, []);
 
 	const sampleClasses = [
         {
@@ -53,12 +54,46 @@ export default function AdminHome() {
         }
     ];
 
+    const exportToCSV = () => {
+        // TODO get attendance
+
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        };
+
+        let response = -1
+        fetch('/api/get-attendance', requestOptions).then(
+            response => response.status 
+        ).then(
+            status => { response = status; }
+        );
+
+        const rows = [
+            ["", "d1", "d2", "d3", "d4", "d5", "d6"],
+            ["s1", "x", "o", "x", "x", "x", "o"],
+            ["s2", "x", "x", "x", "o", "x", "x"]
+        ];
+        
+        let csvContent = "data:text/csv;charset=utf-8," 
+            + rows.map(e => e.join(",")).join("\n");
+    
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+
+        let dateStr = new Date().toISOString().slice(0,10).replace(/-/g, "");
+
+        link.setAttribute("download", "attendance_" + dateStr + ".csv");
+        document.body.appendChild(link); // Required for FF
+        
+        link.click();
+    }
+
 	return (
 		
 		<div className='teacherhome'>
             <Header  page='teacher_home'/>
-
-			<ul>
 
 			<Container className='p-4 align-items-center justify-content-center'>
                 <Accordion alwaysOpen>
@@ -82,7 +117,7 @@ export default function AdminHome() {
                 </Accordion>
 			</Container>
 				
-			</ul>
+			
 		</div>
 	);
 }

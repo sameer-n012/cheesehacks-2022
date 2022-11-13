@@ -131,8 +131,17 @@ def join_class():
 
 @app.route('/api/student_sign_up', methods=['GET', 'POST'])
 def student_sign_up():
-    return redirect("/Student")
+    return redirect(STUDENT_HOME)
 
+@app.route('/api/get-attendance', methods=['GET'])
+def get_attendance():
+    # TODO
+    return redirect(TEACHER_HOME)
+
+@app.route('/api/get-classes', methods=['GET'])
+def get_classes():
+    # TODO
+    return redirect(TEACHER_HOME)
 
 if __name__ == "__main__":
     app.run(debug=True)
