@@ -1,8 +1,10 @@
 import {useEffect, useRef, useState} from 'react'
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import './FaceDetection.css'
 
 export default function FaceDetection() {
+
+	const navigate = useNavigate();
 
 	const [searchParams, _] = useSearchParams();
 	const [classCode, setClassCode] = useState('')
@@ -78,6 +80,7 @@ export default function FaceDetection() {
 				</div>
 				<p className="response-msg">{responseMsg}‎ </p>
             </div>
+			<button onClick={()=>{navigate('/student')}} className="btn btn-outline-dark w-25 m-3">Back</button>
 		</div>
 	);
 }

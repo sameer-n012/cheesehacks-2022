@@ -65,6 +65,7 @@ export default function Header({page}) {
         );
         console.log('joining class ' + className);
         handleClose();
+        window.location.replace(window.location.href);
     }
 
     const createClassSubmit = () => {
@@ -85,13 +86,14 @@ export default function Header({page}) {
         );
         console.log('creating class ' + className);
         handleClose();
+        window.location.replace(window.location.href);
         
     }
 
     // TODO insert application name
 	return (
 		<Container fluid className='header w-100 p-3 d-flex  align-items-center uw-red-bg'>
-			<Link to='/' style={{width:'inherit'}}><h2 className='header-title text-white text-decoration-none'>Face Attendance</h2></Link>
+			<Link to='/' style={{width:'inherit'}}><h2 className='header-title text-white text-decoration-none'>Face First</h2></Link>
             <Container className='d-flex align-items-center justify-content-end'>
                 {page == 'student_home' && currentUser ? (
                     <div>
